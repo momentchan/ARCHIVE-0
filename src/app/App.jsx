@@ -1,10 +1,13 @@
 import { CameraControls } from "@react-three/drei";
 import { Canvas } from '@react-three/fiber'
 import { useRef, useEffect } from 'react'
-import Utilities from "../r3f-gist/utils/Utilities";
+import Utilities from "../r3f-gist/utility/Utilities";
 import { CustomShaderMaterial } from "../r3f-gist/shader/CustomShaderMaterial";
 import fragmentShader from "../shader/test/fragment.glsl";
 import { useControls } from 'leva'
+import { EffectComposer } from "@react-three/postprocessing";
+import SampleEffect from "../r3f-gist/effect/SampleEffect";
+import Dust from "../component/dust/Dust";
 
 function TorusMesh() {
     const materialRef = useRef()
@@ -35,6 +38,10 @@ function TorusMesh() {
 }
 
 export default function App() {
+    const { backgroundColor } = useControls('Background', {
+        backgroundColor: '#f7fcf8'
+    })
+    
     return <>
         <Canvas
             shadows
@@ -46,8 +53,12 @@ export default function App() {
             }}
             gl={{ preserveDrawingBuffer: true }}
         >
+            <color attach="background" args={[backgroundColor]} />
             <CameraControls makeDefault />
-            <TorusMesh />
+
+            <Dust />
+
+            {/* <TorusMesh /> */}
             <Utilities />
         </Canvas>
     </>
