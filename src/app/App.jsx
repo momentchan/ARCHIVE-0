@@ -39,17 +39,16 @@ function TorusMesh() {
 
 export default function App() {
     const { backgroundColor } = useControls('Background', {
-        backgroundColor: '#f7fcf8'
+        backgroundColor: '#dfe2df'
     })
-    
+
     return <>
         <Canvas
             shadows
+            orthographic
             camera={{
-                fov: 45,
-                near: 0.1,
-                far: 200,
-                position: [4, 2, 6]
+                zoom: 300,
+                position: [0, 0, 1]
             }}
             gl={{ preserveDrawingBuffer: true }}
         >

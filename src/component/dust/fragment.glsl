@@ -1,4 +1,5 @@
 #include "../../r3f-gist/shader/cginc/noise/gradientNoise.glsl"
+#include "../../r3f-gist/shader/cginc/noise/random.glsl"
 #include "../../r3f-gist/shader/cginc/utility.glsl"
 
 precision mediump float;
@@ -6,50 +7,71 @@ precision mediump float;
 varying vec2 vUv;
 uniform float uTime;
 uniform float uStripeBase;
+uniform vec2 uStripeRange;
+uniform vec2 uStripeFreq;
 uniform float uBigWaveFreq;
 uniform float uBigWaveRange;
-uniform float uStripeRange;
 uniform float uGlobalNoiseScale;
 uniform float uGlobalNoiseFreq;
-uniform float uEdgeSmoothness;
+uniform vec2 uEdgeSmoothness;
 uniform float uNoiseThresholdRange;
 uniform vec3 uColor;
 
-float random(vec2 st) {
-    return fract(sin(dot(st.xy ,vec2(12.9898,78.233))) * 43758.5453123);
+float calculateEdgeMask(vec2 uv, vec2 smoothness, float baseValue) {
+    float verticalEdge = remap(
+        smoothstep(0.0, smoothness.x, 1.0 - uv.y), 
+        vec2(0.0, 1.0), 
+        vec2(baseValue, 1.0)
+    );
+    float fadeOut = smoothstep(0.0, smoothness.y, uv.y);
+    return verticalEdge * fadeOut;
+}
+
+float calculateWavePattern(vec2 uv, float frequency, float amplitude) {
+    return gradientNoise(vec2(0.5, uv.y),  frequency) * amplitude;
+}
+
+float calculateNoisePattern(vec2 uv) {
+    float baseNoise = random(floor(uv * 500.));
+    float noiseThreshold = smoothstep(uNoiseThresholdRange, 0.0, uv.y);
+    return mix(0.0, baseNoise, noiseThreshold);
+}
+
+float calculateHorizontalStripe(vec2 uv, float frequency, float amplitude) {
+    return gradientNoise(vec2(0.5, uv.y), frequency) * amplitude;
+}
+
+float calculateVerticalStripe(vec2 uv, float frequency, float amplitude, float globalNoiseFreq, float globalNoiseScale) {
+    float stripe = gradientNoise(vec2(uv.x, 0.5), frequency) * amplitude;
+    stripe = pow(stripe, 2.0);
+    float globalNoise = gradientNoise(uv, globalNoiseFreq) * globalNoiseScale;
+    return stripe * globalNoise;
+}
+
+float calculateRandomNoise(vec2 uv, float scale) {
+    return remap(random(floor(uv * scale)), vec2(0.0, 1.0), vec2(0.0, 0.05));
 }
 
 void main() {
-    float edge = smoothstep(0.0, uEdgeSmoothness, vUv.y) 
-                 * smoothstep(0.0, uEdgeSmoothness, 1.0 - vUv.y)
-                 * smoothstep(0.0, uEdgeSmoothness, vUv.x) 
-                 * smoothstep(0.0, uEdgeSmoothness, 1.0 - vUv.x);
-
-    float bigWave = sin(vUv.y * 3.1415 * uBigWaveFreq) * uBigWaveRange;
-
-    float wn = remap(noise(vUv), vec2(.0,1.), vec2(0.0, .05));
-    float gn = gradientNoise(vUv, uGlobalNoiseFreq) * uGlobalNoiseScale;
-
-    float stripe =  gradientNoise(vec2(0.5, vUv.y), 200.) * uStripeRange;
-    float base = uStripeBase + (bigWave * stripe + wn);// * gn;
-
-    base *= edge;
-
-    // 噪聲顆粒 fade 區段
-    float noiseThreshold = smoothstep(uNoiseThresholdRange, 0.0, vUv.y); // 下方 20% 是 noise 區域
-    float noise = random(vUv);
-    float grain = mix(0.0, noise, noiseThreshold);
-
-    // 合成背景 + 噪聲（上方乾淨、下方顆粒）
-    float final = base + grain;
-    final = clamp(final, 0.0, 1.0);
-
-    float global_edge = smoothstep(0., 0.1, vUv.y) ;
-    // final = base;
-
-    vec3 color = uColor;
-    // color *= (1.-final);
-    color = vec3(final);
-
-    gl_FragColor = vec4(color, global_edge);
+    // Edge mask
+    float edgeMask = calculateEdgeMask(vUv, uEdgeSmoothness, uStripeBase);
+    
+    // Pattern layers
+    float wave = calculateWavePattern(vUv, uBigWaveFreq, uBigWaveRange);
+    float hStripe = calculateHorizontalStripe(vUv, uStripeFreq.x, uStripeRange.x);
+    float vStripe = calculateVerticalStripe(vUv, uStripeFreq.y, uStripeRange.y, uGlobalNoiseFreq, uGlobalNoiseScale);
+    float noise = calculateRandomNoise(vUv, 800.0);
+    
+    // Combine base pattern
+    float basePattern = uStripeBase + (wave * hStripe + noise + vStripe);
+    basePattern *= edgeMask;
+    
+    // Add grain and finalize
+    float grain = calculateNoisePattern(vUv);
+    float finalPattern = clamp(basePattern + grain, 0.0, 1.0);
+    
+    // Output
+    vec3 finalColor = uColor * (1.0 - finalPattern);
+    float alpha = (1.0 - finalPattern) * smoothstep(0.0, uEdgeSmoothness.y, vUv.y);
+    gl_FragColor = vec4(finalColor, alpha);
 }
