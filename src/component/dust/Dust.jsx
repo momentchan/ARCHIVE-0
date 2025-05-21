@@ -11,17 +11,20 @@ const Dust = () => {
             color: { value: '#000000' },
         }),
         waves: folder({
-            bigWaveRange: { value: 0.25, min: 0, max: 1, step: 0.01 },
-            bigWaveFrequency: { value: 2.5, min: 1, max: 10, step: 0.1 },
-            stripeRangeH: { value: 0.15, min: 0, max: 1, step: 0.01 },
-            stripeRangeV: { value: 0.27, min: 0, max: 1, step: 0.01 },
+            bigWaveStrength: { value: 0.45, min: 0, max: 1, step: 0.01 },
+            bigWaveFrequency: { value: 6, min: 1, max: 10, step: 0.1 },
+            bigWavePower: { value: 2.0, min: 1, max: 5, step: 0.1 },
+            stripeStrengthH: { value: 0.15, min: 0, max: 1, step: 0.01 },
+            stripeStrengthV: { value: 0.27, min: 0, max: 1, step: 0.01 },
             stripeFreqH: { value: 300, min: 1, max: 400, step: 1 },
             stripeFreqV: { value: 400, min: 1, max: 400, step: 1 },
         }),
         noise: folder({
-            globalNoiseScale: { value: 0.6, min: 0, max: 2, step: 0.01 },
+            globalNoiseStrength: { value: 0.6, min: 0, max: 2, step: 0.01 },
             globalNoiseFreq: { value: 3.6, min: 0, max: 10, step: 0.1 },
             noiseThresholdRange: { value: 0.35, min: 0, max: 1, step: 0.01 },
+            grainFreq: { value: 500, min: 100, max: 1000, step: 10 },
+            grainBlur: { value: 0.001, min: 0, max: 0.01, step: 0.001 },
         }),
         edge: folder({
             edgeSmoothnessTop: { value: 0.01, min: 0, max: 1, step: 0.01 },
@@ -31,16 +34,19 @@ const Dust = () => {
 
     const uniforms = {
         uStripeBase: controls.stripeBase,
-        uBigWaveRange: controls.bigWaveRange,
+        uBigWaveStrength: controls.bigWaveStrength,
         uBigWaveFreq: controls.bigWaveFrequency,
-        uStripeRange: new THREE.Vector2(controls.stripeRangeH, controls.stripeRangeV),
+        uBigWavePower: controls.bigWavePower,
+        uStripeStrength: new THREE.Vector2(controls.stripeStrengthH, controls.stripeStrengthV),
         uStripeFreq: new THREE.Vector2(controls.stripeFreqH, controls.stripeFreqV),
-        uGlobalNoiseScale: controls.globalNoiseScale,
+        uGlobalNoiseStrength: controls.globalNoiseStrength,
         uGlobalNoiseFreq: controls.globalNoiseFreq,
         uEdgeSmoothness: new THREE.Vector2(controls.edgeSmoothnessTop, controls.edgeSmoothnessBottom),
         uNoiseThresholdRange: controls.noiseThresholdRange,
         uColor: new THREE.Color(controls.color),
         uVerticalStripRange: controls.verticalStripRange,
+        uGrainFreq: controls.grainFreq,
+        uGrainBlur: controls.grainBlur,
     };
 
     return (

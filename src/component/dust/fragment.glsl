@@ -7,15 +7,18 @@ precision mediump float;
 varying vec2 vUv;
 uniform float uTime;
 uniform float uStripeBase;
-uniform vec2 uStripeRange;
+uniform vec2 uStripeStrength;
 uniform vec2 uStripeFreq;
 uniform float uBigWaveFreq;
-uniform float uBigWaveRange;
-uniform float uGlobalNoiseScale;
+uniform float uBigWaveStrength;
+uniform float uBigWavePower;
+uniform float uGlobalNoiseStrength;
 uniform float uGlobalNoiseFreq;
 uniform vec2 uEdgeSmoothness;
 uniform float uNoiseThresholdRange;
+uniform float uGrainFreq;
 uniform vec3 uColor;
+uniform float uGrainBlur;
 
 float calculateEdgeMask(vec2 uv, vec2 smoothness, float baseValue) {
     float verticalEdge = remap(
@@ -28,28 +31,39 @@ float calculateEdgeMask(vec2 uv, vec2 smoothness, float baseValue) {
 }
 
 float calculateWavePattern(vec2 uv, float frequency, float amplitude) {
-    return gradientNoise(vec2(0.5, uv.y),  frequency) * amplitude;
+    return pow(gradientNoise(vec2(0.5, uv.y), frequency), uBigWavePower) * amplitude;
 }
 
-float calculateNoisePattern(vec2 uv) {
-    float baseNoise = random(floor(uv * 500.));
+float calculateGrainNoise(vec2 uv) {
+    float baseNoise = random(floor(uv * uGrainFreq));
     float noiseThreshold = smoothstep(uNoiseThresholdRange, 0.0, uv.y);
     return mix(0.0, baseNoise, noiseThreshold);
 }
 
-float calculateHorizontalStripe(vec2 uv, float frequency, float amplitude) {
-    return gradientNoise(vec2(0.5, uv.y), frequency) * amplitude;
+float calculateStripe(vec2 uv, float frequency, float offset, float amplitude) {
+    return (gradientNoise(uv, frequency) - offset) * amplitude;
 }
 
-float calculateVerticalStripe(vec2 uv, float frequency, float amplitude, float globalNoiseFreq, float globalNoiseScale) {
-    float stripe = gradientNoise(vec2(uv.x, 0.5), frequency) * amplitude;
-    stripe = pow(stripe, 2.0);
-    float globalNoise = gradientNoise(uv, globalNoiseFreq) * globalNoiseScale;
-    return stripe * globalNoise;
+float calculateGlobalNoise(vec2 uv, float frequency, float amplitude) {
+    return (gradientNoise(uv, frequency) - 0.5) * amplitude;
 }
 
 float calculateRandomNoise(vec2 uv, float scale) {
     return remap(random(floor(uv * scale)), vec2(0.0, 1.0), vec2(0.0, 0.05));
+}
+
+float calculateBlurredGrain(vec2 uv) {
+    float grain = 0.0;
+    float blurSize = uGrainBlur;
+    
+    // 3x3 blur kernel
+    for(float x = -1.0; x <= 1.0; x++) {
+        for(float y = -1.0; y <= 1.0; y++) {
+            vec2 offset = vec2(x, y) * blurSize;
+            grain += calculateGrainNoise(uv + offset);
+        }
+    }
+    return grain / 9.0;
 }
 
 void main() {
@@ -57,9 +71,9 @@ void main() {
     float edgeMask = calculateEdgeMask(vUv, uEdgeSmoothness, uStripeBase);
     
     // Pattern layers
-    float wave = calculateWavePattern(vUv, uBigWaveFreq, uBigWaveRange);
-    float hStripe = calculateHorizontalStripe(vUv, uStripeFreq.x, uStripeRange.x);
-    float vStripe = calculateVerticalStripe(vUv, uStripeFreq.y, uStripeRange.y, uGlobalNoiseFreq, uGlobalNoiseScale);
+    float wave = calculateWavePattern(vUv, uBigWaveFreq, uBigWaveStrength);
+    float hStripe = calculateStripe(vec2(0.5, vUv.y), uStripeFreq.x, 0.2, uStripeStrength.x);
+    float vStripe = calculateStripe(vec2(vUv.x, 0.5), uStripeFreq.y, 0.5, uStripeStrength.y) * calculateGlobalNoise(vUv, uGlobalNoiseFreq, uGlobalNoiseStrength);
     float noise = calculateRandomNoise(vUv, 800.0);
     
     // Combine base pattern
@@ -67,7 +81,7 @@ void main() {
     basePattern *= edgeMask;
     
     // Add grain and finalize
-    float grain = calculateNoisePattern(vUv);
+    float grain = calculateBlurredGrain(vUv);
     float finalPattern = clamp(basePattern + grain, 0.0, 1.0);
     
     // Output

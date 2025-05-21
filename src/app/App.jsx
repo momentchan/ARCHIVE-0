@@ -8,6 +8,7 @@ import { useControls } from 'leva'
 import { EffectComposer } from "@react-three/postprocessing";
 import SampleEffect from "../r3f-gist/effect/SampleEffect";
 import Dust from "../component/dust/Dust";
+import Poster from "../component/Poster";
 
 function TorusMesh() {
     const materialRef = useRef()
@@ -48,14 +49,24 @@ export default function App() {
             orthographic
             camera={{
                 zoom: 300,
-                position: [0, 0, 1]
+                position: [0, 0, 1],
+                near: 0.1,
             }}
             gl={{ preserveDrawingBuffer: true }}
         >
             <color attach="background" args={[backgroundColor]} />
-            <CameraControls makeDefault />
 
-            <Dust />
+            <CameraControls
+                makeDefault
+                azimuthRotateSpeed={0}
+                polarRotateSpeed={0}
+                // truck={0}
+                />
+
+            <Poster
+                title="Hello World">
+                <Dust />
+            </Poster>
 
             {/* <TorusMesh /> */}
             <Utilities />
