@@ -21,7 +21,7 @@ const Poster = ({ position, title = '', subtitle = '', description = '', childre
         }),
         subtitle: folder({
             subtitleText: { value: subtitle },
-            subtitleSize: { value: 0.1, min: 0.05, max: 0.5, step: 0.01 },
+            subtitleSize: { value: 0.08, min: 0.05, max: 0.1, step: 0.001 },
         }),
         description: folder({
             descriptionText: { value: description },
@@ -61,7 +61,7 @@ const Poster = ({ position, title = '', subtitle = '', description = '', childre
         <Center
             position={[0, 0.2, 0.1]}>
             <Text
-                position={[0, -1.3, 0]}
+                position={[0, -1.35, 0]}
                 fontSize={controls.titleSize}
                 anchorX="center"
                 anchorY="middle"
@@ -70,25 +70,30 @@ const Poster = ({ position, title = '', subtitle = '', description = '', childre
             >
                 {controls.titleText}
             </Text>
-            <Text
-                position={[0, -1.5, 0]}
-                fontSize={controls.subtitleSize}
-                anchorX="center"
-                anchorY="middle"
-                {...sharedTextProps}
-            >
-                {controls.subtitleText}
-            </Text>
-            <Text
-                position={[-1, -1.8, 0]}
-                fontSize={controls.descriptionSize}
-                textAlign='left'
-                anchorX="left"
-                anchorY="top"
-                {...sharedTextProps}
-            >
-                {controls.descriptionText}
-            </Text>
+
+            <Center
+                position={[0, -1.4, 0]}
+                left>
+                <Text
+                    position={[0, 0, 0]}
+                    fontSize={controls.subtitleSize}
+                    anchorX="left"
+                    anchorY="middle"
+                    {...sharedTextProps}
+                >
+                    {controls.subtitleText}
+                </Text>
+                <Text
+                    position={[0, -0.1, 0]}
+                    fontSize={controls.descriptionSize}
+                    textAlign='left'
+                    anchorX="left"
+                    anchorY="top"
+                    {...sharedTextProps}
+                >
+                    {controls.descriptionText}
+                </Text>
+            </Center>
             {children}
         </Center>
     );
