@@ -24,7 +24,7 @@ export default function App() {
             shadows
             orthographic
             camera={{
-                zoom: 200,
+                zoom: 150,
                 position: [0, 0, 1],
                 near: 0.1,
             }}
@@ -36,12 +36,12 @@ export default function App() {
                 makeDefault
                 azimuthRotateSpeed={0}
                 polarRotateSpeed={0}
-                // truck={0}
+                truckSpeed={0}
                 />
 
             <Poster
-                position={[0, 0.5, 0]}
                 title={currentPoster.title}
+                subtitle={currentPoster.subtitle}
                 description={currentPoster.description}
             >
                 <Dust />
@@ -51,7 +51,7 @@ export default function App() {
                 <CustomOverlay/>
             </EffectComposer> */}
 
-            <Utilities />
+            {/* <Utilities /> */}
         </Canvas>
     </>
 }
