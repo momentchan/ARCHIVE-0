@@ -9,46 +9,22 @@ import { EffectComposer } from "@react-three/postprocessing";
 import SampleEffect from "../r3f-gist/effect/SampleEffect";
 import Dust from "../component/dust/Dust";
 import Poster from "../component/Poster";
-
-function TorusMesh() {
-    const materialRef = useRef()
-
-    const { alpha } = useControls('Torus Material', {
-        alpha: {
-            value: 0.5,
-            min: 0,
-            max: 1,
-            step: 0.01
-        }
-    })
-
-    return (
-        <mesh>
-            <torusGeometry />
-            <CustomShaderMaterial
-                ref={materialRef}
-                fragmentShader={fragmentShader}
-                uniforms={{
-                    uAlpha: alpha,
-                }}
-                transparent={true}
-                side={2} // Add this to make sure both sides are visible
-            />
-        </mesh>
-    )
-}
+import CustomOverlay from "../component/overlay/CustomOverlay";
+import { posterData } from "../data/posterData";
 
 export default function App() {
     const { backgroundColor } = useControls('Background', {
         backgroundColor: '#dfe2df'
-    })
+    });
+
+    const currentPoster = posterData[1]; // Select the first poster data
 
     return <>
         <Canvas
             shadows
             orthographic
             camera={{
-                zoom: 300,
+                zoom: 200,
                 position: [0, 0, 1],
                 near: 0.1,
             }}
@@ -64,11 +40,17 @@ export default function App() {
                 />
 
             <Poster
-                title="Hello World">
+                position={[0, 0.5, 0]}
+                title={currentPoster.title}
+                description={currentPoster.description}
+            >
                 <Dust />
             </Poster>
 
-            {/* <TorusMesh /> */}
+            {/* <EffectComposer>
+                <CustomOverlay/>
+            </EffectComposer> */}
+
             <Utilities />
         </Canvas>
     </>

@@ -1,4 +1,5 @@
 #include "../../r3f-gist/shader/cginc/noise/gradientNoise.glsl"
+#include "../../r3f-gist/shader/cginc/noise/fractal.glsl"
 #include "../../r3f-gist/shader/cginc/noise/random.glsl"
 #include "../../r3f-gist/shader/cginc/utility.glsl"
 
@@ -19,6 +20,7 @@ uniform float uNoiseThresholdRange;
 uniform float uGrainFreq;
 uniform vec3 uColor;
 uniform float uGrainBlur;
+uniform float uSpeed;
 
 float calculateEdgeMask(vec2 uv, vec2 smoothness, float baseValue) {
     float verticalEdge = remap(
@@ -45,7 +47,7 @@ float calculateStripe(vec2 uv, float frequency, float offset, float amplitude) {
 }
 
 float calculateGlobalNoise(vec2 uv, float frequency, float amplitude) {
-    return (gradientNoise(uv, frequency) - 0.5) * amplitude;
+    return (gradientNoise(uv + uTime * uSpeed, frequency) - 0.5) * amplitude;
 }
 
 float calculateRandomNoise(vec2 uv, float scale) {
@@ -73,11 +75,12 @@ void main() {
     // Pattern layers
     float wave = calculateWavePattern(vUv, uBigWaveFreq, uBigWaveStrength);
     float hStripe = calculateStripe(vec2(0.5, vUv.y), uStripeFreq.x, 0.2, uStripeStrength.x);
-    float vStripe = calculateStripe(vec2(vUv.x, 0.5), uStripeFreq.y, 0.5, uStripeStrength.y) * calculateGlobalNoise(vUv, uGlobalNoiseFreq, uGlobalNoiseStrength);
+    float vStripe = calculateStripe(vec2(vUv.x, 0.5), uStripeFreq.y, 0.5, uStripeStrength.y);
+    float gNoise = calculateGlobalNoise(vUv, uGlobalNoiseFreq, uGlobalNoiseStrength);
     float noise = calculateRandomNoise(vUv, 800.0);
     
     // Combine base pattern
-    float basePattern = uStripeBase + (wave * hStripe + noise + vStripe);
+    float basePattern = uStripeBase + (wave * hStripe + noise + vStripe * gNoise);
     basePattern *= edgeMask;
     
     // Add grain and finalize

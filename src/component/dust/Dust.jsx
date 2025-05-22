@@ -30,6 +30,7 @@ const Dust = () => {
             edgeSmoothnessTop: { value: 0.01, min: 0, max: 1, step: 0.01 },
             edgeSmoothnessBottom: { value: 0.25, min: 0, max: 1, step: 0.01 },
         }),
+        speed: { value: 0.0, min: 0, max: 1, step: 0.1 },
     });
 
     const uniforms = {
@@ -47,6 +48,7 @@ const Dust = () => {
         uVerticalStripRange: controls.verticalStripRange,
         uGrainFreq: controls.grainFreq,
         uGrainBlur: controls.grainBlur,
+        uSpeed: controls.speed,
     };
 
     return (
