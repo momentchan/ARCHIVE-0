@@ -1,31 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { Center, Html, Text } from '@react-three/drei';
+import { Center, Text } from '@react-three/drei';
 import { folder, useControls } from 'leva';
 import { fontPaths } from '../data/fonts';
 import { useThree } from '@react-three/fiber';
+import { levaStore } from 'leva';
 
-const Poster = ({ position, title = '', subtitle = '', description = '', children }) => {
-    const [fontIndex, setFontIndex] = useState(0); // Single font index for both title and description
-    const [currentFont, setCurrentFont] = useState(Object.keys(fontPaths)[0]); // Single font state
+const Poster = ({ title = '', subtitle = '', description = '', presets = {}, children, useHtml = false }) => {
+    const [fontIndex, setFontIndex] = useState(0);
+    const [currentFont, setCurrentFont] = useState(presets.font || Object.keys(fontPaths)[0]);
     const fontKeys = Object.keys(fontPaths);
+
+    useEffect(() => {
+        levaStore.set({
+            'Poster Text.title.titleText': title,
+            'Poster Text.subtitle.subtitleText': subtitle,
+            'Poster Text.description.descriptionText': description,
+        });
+    }, [title, subtitle, description, presets]);
+
 
     const controls = useControls('Poster Text', {
         shared: folder({
-            textColor: { value: '#000000' },
+            textColor: { value: presets.color || '#000000' },
             textAlpha: { value: 1, min: 0, max: 1, step: 0.01 },
         }),
         title: folder({
             titleText: { value: title },
-            titleSize: { value: 0.2, min: 0.1, max: 1, step: 0.01 },
+            titleSize: { value: presets.titleSize || 0.2, min: 0.1, max: 1, step: 0.01 },
             titleSpacing: { value: 0.5, min: 0, max: 1, step: 0.01 },
         }),
         subtitle: folder({
             subtitleText: { value: subtitle },
-            subtitleSize: { value: 0.08, min: 0.05, max: 0.1, step: 0.001 },
+            subtitleSize: { value: presets.subtitleSize || 0.1, min: 0.05, max: 0.5, step: 0.01 },
         }),
         description: folder({
             descriptionText: { value: description },
-            descriptionSize: { value: 0.06, min: 0.02, max: 0.5, step: 0.01 },
+            descriptionSize: { value: presets.descriptionSize || 0.06, min: 0.02, max: 0.5, step: 0.01 },
         }),
     });
 
@@ -36,8 +46,7 @@ const Poster = ({ position, title = '', subtitle = '', description = '', childre
         font: fontPaths[currentFont],
         maxWidth: 2
     }
-
-    const viewport = useThree((state) => state.viewport)
+    const viewport = useThree((state) => state.viewport);
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -54,7 +63,7 @@ const Poster = ({ position, title = '', subtitle = '', description = '', childre
 
     useEffect(() => {
         const newFont = fontKeys[fontIndex];
-        setCurrentFont(newFont); // Update the font state for both title and description
+        setCurrentFont(newFont);
     }, [fontIndex, fontKeys]);
 
     return (

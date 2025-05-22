@@ -1,6 +1,6 @@
 import { CameraControls } from "@react-three/drei";
 import { Canvas } from '@react-three/fiber'
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import Utilities from "../r3f-gist/utility/Utilities";
 import { CustomShaderMaterial } from "../r3f-gist/shader/CustomShaderMaterial";
 import fragmentShader from "../shader/test/fragment.glsl";
@@ -17,7 +17,20 @@ export default function App() {
         backgroundColor: '#dfe2df'
     });
 
-    const currentPoster = posterData[1]; // Select the first poster data
+    const [posterIndex, setPosterIndex] = useState(0); // Track the current poster index
+
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.code === 'KeyP') {
+                setPosterIndex((prevIndex) =>  (prevIndex + 1) % posterData.length);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
 
     return <>
         <Canvas
@@ -37,12 +50,13 @@ export default function App() {
                 azimuthRotateSpeed={0}
                 polarRotateSpeed={0}
                 truckSpeed={0}
-                />
+            />
 
             <Poster
-                title={currentPoster.title}
-                subtitle={currentPoster.subtitle}
-                description={currentPoster.description}
+                title={posterData[posterIndex].title}
+                subtitle={posterData[posterIndex].subtitle}
+                description={posterData[posterIndex].description}
+                presets={posterData[posterIndex].presets}
             >
                 <Dust />
             </Poster>
