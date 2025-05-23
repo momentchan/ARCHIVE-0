@@ -4,13 +4,14 @@ import { useRef, useEffect, useState } from 'react'
 import Utilities from "../r3f-gist/utility/Utilities";
 import { CustomShaderMaterial } from "../r3f-gist/shader/CustomShaderMaterial";
 import fragmentShader from "../shader/test/fragment.glsl";
-import { useControls } from 'leva'
+import { Leva, useControls } from 'leva'
 import { EffectComposer } from "@react-three/postprocessing";
 import SampleEffect from "../r3f-gist/effect/SampleEffect";
 import Dust from "../component/dust/Dust";
 import Poster from "../component/Poster";
 import CustomOverlay from "../component/overlay/CustomOverlay";
 import { posterData } from "../data/posterData";
+import { customTheme, defaultTheme } from "../r3f-gist/theme/levaTheme";
 
 export default function App() {
     const { backgroundColor } = useControls('Background', {
@@ -22,7 +23,7 @@ export default function App() {
     useEffect(() => {
         const handleKeyDown = (event) => {
             if (event.code === 'KeyP') {
-                setPosterIndex((prevIndex) =>  (prevIndex + 1) % posterData.length);
+                setPosterIndex((prevIndex) => (prevIndex + 1) % posterData.length);
             }
         };
 
@@ -33,6 +34,12 @@ export default function App() {
     }, []);
 
     return <>
+        <Leva
+            flat
+            theme={customTheme}
+            titleBar={{ title: 'Setting', filter: false }}
+        />
+
         <Canvas
             shadows
             orthographic
@@ -51,21 +58,20 @@ export default function App() {
                 polarRotateSpeed={0}
                 truckSpeed={0}
             />
-
             <Poster
                 title={posterData[posterIndex].title}
                 subtitle={posterData[posterIndex].subtitle}
                 description={posterData[posterIndex].description}
                 presets={posterData[posterIndex].presets}
             >
-                <Dust />
+                {({ presets }) => <Dust presets={presets} />}
             </Poster>
 
             {/* <EffectComposer>
                 <CustomOverlay/>
             </EffectComposer> */}
 
-            {/* <Utilities /> */}
+            <Utilities />
         </Canvas>
     </>
 }

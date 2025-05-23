@@ -3,66 +3,44 @@
 #include "../../r3f-gist/shader/cginc/noise/random.glsl"
 #include "../../r3f-gist/shader/cginc/utility.glsl"
 
-precision mediump float;
+precision highp float;
 
 varying vec2 vUv;
 uniform float uTime;
 uniform float uStripeBase;
 uniform vec2 uStripeStrength;
 uniform vec2 uStripeFreq;
-uniform float uBigWaveFreq;
-uniform float uBigWaveStrength;
-uniform float uBigWavePower;
-uniform float uGlobalNoiseStrength;
-uniform float uGlobalNoiseFreq;
+uniform float uWaveFreq;
+uniform float uWaveStrength;
+uniform float uWavePower;
 uniform vec2 uEdgeSmoothness;
 uniform float uNoiseThresholdRange;
-uniform float uGrainFreq;
+uniform vec2 uGrainFreq; // Use vec2 for separate frequencies for upper and lower sides
 uniform vec3 uColor;
 uniform float uGrainBlur;
 uniform float uSpeed;
+uniform float uFractalNoiseStrength;
+uniform float uFractalNoiseFreq;
 
 float calculateEdgeMask(vec2 uv, vec2 smoothness, float baseValue) {
-    float verticalEdge = remap(
-        smoothstep(0.0, smoothness.x, 1.0 - uv.y), 
-        vec2(0.0, 1.0), 
-        vec2(baseValue, 1.0)
-    );
+    float verticalEdge = remap(smoothstep(0.0, smoothness.x, 1.0 - uv.y), vec2(0.0, 1.0), vec2(baseValue, 1.0));
     float fadeOut = smoothstep(0.0, smoothness.y, uv.y);
     return verticalEdge * fadeOut;
 }
 
-float calculateWavePattern(vec2 uv, float frequency, float amplitude) {
-    return pow(gradientNoise(vec2(0.5, uv.y), frequency), uBigWavePower) * amplitude;
-}
-
-float calculateGrainNoise(vec2 uv) {
-    float baseNoise = random(floor(uv * uGrainFreq));
-    float noiseThreshold = smoothstep(uNoiseThresholdRange, 0.0, uv.y);
-    return mix(0.0, baseNoise, noiseThreshold);
-}
-
-float calculateStripe(vec2 uv, float frequency, float offset, float amplitude) {
-    return (gradientNoise(uv, frequency) - offset) * amplitude;
-}
-
-float calculateGlobalNoise(vec2 uv, float frequency, float amplitude) {
-    return (gradientNoise(uv + uTime * uSpeed, frequency) - 0.5) * amplitude;
-}
-
-float calculateRandomNoise(vec2 uv, float scale) {
-    return remap(random(floor(uv * scale)), vec2(0.0, 1.0), vec2(0.0, 0.05));
+float calculateGradNoise(vec2 uv, float frequency, float speed, float power, float offset, float amplitude) {
+    return (pow(gradientNoise01(uv * frequency + uTime * speed), power) + offset) * amplitude;
 }
 
 float calculateBlurredGrain(vec2 uv) {
     float grain = 0.0;
     float blurSize = uGrainBlur;
-    
+
     // 3x3 blur kernel
     for(float x = -1.0; x <= 1.0; x++) {
         for(float y = -1.0; y <= 1.0; y++) {
             vec2 offset = vec2(x, y) * blurSize;
-            grain += calculateGrainNoise(uv + offset);
+            grain += mix(0.0, grainNoise(uv + offset, uGrainFreq.y, vec2(.0, 1.)), smoothstep(uNoiseThresholdRange, 0.0, uv.y));
         }
     }
     return grain / 9.0;
@@ -71,24 +49,28 @@ float calculateBlurredGrain(vec2 uv) {
 void main() {
     // Edge mask
     float edgeMask = calculateEdgeMask(vUv, uEdgeSmoothness, uStripeBase);
-    
+
     // Pattern layers
-    float wave = calculateWavePattern(vUv, uBigWaveFreq, uBigWaveStrength);
-    float hStripe = calculateStripe(vec2(0.5, vUv.y), uStripeFreq.x, 0.2, uStripeStrength.x);
-    float vStripe = calculateStripe(vec2(vUv.x, 0.5), uStripeFreq.y, 0.5, uStripeStrength.y);
-    float gNoise = calculateGlobalNoise(vUv, uGlobalNoiseFreq, uGlobalNoiseStrength);
-    float noise = calculateRandomNoise(vUv, 800.0);
-    
+    float wave = calculateGradNoise(vec2(0.5, vUv.y), uWaveFreq, uSpeed, uWavePower, .0, uWaveStrength);
+
+    float hStripe = calculateGradNoise(vec2(0.5, vUv.y), uStripeFreq.x, .0, 1., -.2, uStripeStrength.x);
+
+    float vStripe = calculateGradNoise(vec2(vUv.x, 0.5), uStripeFreq.y, .0, 1., - 0.5, uStripeStrength.y);
+
+    float noise = grainNoise(vUv, uGrainFreq.x, vec2(0.0, 0.05));
+    float fNoise = (fbm2(vUv * uFractalNoiseFreq, uTime * uSpeed) - 0.0) * uFractalNoiseStrength;
+
     // Combine base pattern
-    float basePattern = uStripeBase + (wave * hStripe + noise + vStripe * gNoise);
+    float basePattern = uStripeBase + (hStripe * wave + vStripe * fNoise) + noise;
     basePattern *= edgeMask;
-    
+
     // Add grain and finalize
     float grain = calculateBlurredGrain(vUv);
     float finalPattern = clamp(basePattern + grain, 0.0, 1.0);
-    
+
     // Output
     vec3 finalColor = uColor * (1.0 - finalPattern);
+
     float alpha = (1.0 - finalPattern) * smoothstep(0.0, uEdgeSmoothness.y, vUv.y);
     gl_FragColor = vec4(finalColor, alpha);
 }
