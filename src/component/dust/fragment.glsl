@@ -10,6 +10,7 @@ uniform float uTime;
 uniform float uBase;
 uniform vec2 uStripeStrength;
 uniform vec2 uStripeFreq;
+uniform vec2 uStripeSpeed; 
 uniform float uWaveFreq;
 uniform float uWaveStrength;
 uniform float uWavePower;
@@ -18,9 +19,10 @@ uniform float uSeparation;
 uniform vec2 uGrainFreq;
 uniform vec3 uColor;
 uniform float uGrainBlur;
-uniform float uSpeed;
+uniform float uWaveSpeed; 
 uniform float uFractalNoiseStrength;
 uniform float uFractalNoiseFreq;
+uniform float uFractalSpeed;
 
 float calculateEdgeMask(vec2 uv, vec2 smoothness, float baseValue) {
     float verticalEdge = remap(smoothstep(0.0, smoothness.x, 1.0 - uv.y), vec2(0.0, 1.0), vec2(baseValue, 1.0));
@@ -51,11 +53,11 @@ void main() {
     float edgeMask = calculateEdgeMask(vUv, uEdgeSmoothness, uBase); 
 
     // Pattern layers
-    float wave = calculateGradNoise(vec2(0.5, vUv.y), uWaveFreq, uSpeed, uWavePower, .0, uWaveStrength);
-    float hStripe = calculateGradNoise(vec2(0.5, vUv.y), uStripeFreq.x, .0, 1., -.2, uStripeStrength.x);
-    float vStripe = calculateGradNoise(vec2(vUv.x, 0.5), uStripeFreq.y, .0, 1., - 0.5, uStripeStrength.y);
+    float wave = calculateGradNoise(vec2(0.5, vUv.y), uWaveFreq, uWaveSpeed, uWavePower, .0, uWaveStrength);
+    float vStripe = calculateGradNoise(vec2(vUv.x, 0.5), uStripeFreq.x, uStripeSpeed.x, 1., - 0.5, uStripeStrength.x);
+    float hStripe = calculateGradNoise(vec2(0.5, vUv.y), uStripeFreq.y, uStripeSpeed.y, 1., -.2, uStripeStrength.y);
     float noise = grainNoise(vUv, uGrainFreq.x, vec2(0.0, 0.05));
-    float fNoise = (fbm2(vUv * uFractalNoiseFreq, uTime * uSpeed) - 0.0) * uFractalNoiseStrength;
+    float fNoise = (fbm2(vUv * uFractalNoiseFreq, uTime * uFractalSpeed) - 0.0) * uFractalNoiseStrength; // Updated to use uFractalSpeed
 
     // Combine base pattern
     float basePattern = uBase + (hStripe + vStripe) * (wave + fNoise) + noise;

@@ -5,28 +5,28 @@ import { folder, levaStore, useControls } from 'leva';
 import * as THREE from 'three';
 
 const Dust = ({ presets = {} }) => { // Ensure presets has a default value
-    const collapsed = true;
+    const collapsed = false;
 
     const controls = useControls('Effect', {
         Basic: folder({
             color: { value: presets.dustColor || '#000000' },
             base: { value: presets.base || 0.05, min: 0, max: 1, step: 0.01 },
-            speed: { value: presets.speed || 0.2, min: 0, max: 1, step: 0.01 },
         }, { collapsed }),
-
+        
         Stripe: folder({
-            hStripeStrength: { value: presets.hStripeStrength || 0.5, min: 0, max: 1, step: 0.01 },
-            vStripeStrength: { value: presets.vStripeStrength || 0.27, min: 0, max: 1, step: 0.01 },
-            hStripeFreq: { value: presets.hStripeFreq || 300, min: 1, max: 400, step: 1 },
-            vStripeFreq: { value: presets.vStripeFreq || 400, min: 1, max: 400, step: 1 },
+            stripeStrength: { value: presets.stripeStrength || { x: 0.27, y: 0.5 }, step: 0.01 }, 
+            stripeFreq: { value: presets.stripeFreq || { x: 400, y: 300 }, step: 1 }, 
+            stripeSpeed: { value: presets.stripeSpeed || { x: 0, y: 0 }, step: 0.01 },
             waveStrength: { value: presets.waveStrength || 0.7, min: 0, max: 1, step: 0.01 },
             waveFrequency: { value: presets.waveFrequency || 4, min: 1, max: 10, step: 0.1 },
             wavePower: { value: presets.wavePower || 2.0, min: 1, max: 5, step: 0.1 },
+            waveSpeed: { value: presets.waveSpeed || 0.2, min: 0, max: 1, step: 0.01 },
         }, { collapsed }),
 
         Fractal: folder({
             fractalNoiseStrength: { value: presets.fractalNoiseStrength || 0.6, min: 0, max: 2, step: 0.01 },
             fractalNoiseFreq: { value: presets.fractalNoiseFreq || 1.2, min: 0, max: 10, step: 0.1 },
+            fractalSpeed: { value: presets.fractalSpeed || 0.2, min: 0, max: 1, step: 0.01 }, // Added fractalSpeed control
         }, { collapsed }),
 
         Edge: folder({
@@ -45,17 +45,17 @@ const Dust = ({ presets = {} }) => { // Ensure presets has a default value
     useEffect(() => {
         levaStore.set({
             'Effect.Basic.color': presets.dustColor || '#000000',
-            'Effect.Basic.speed': presets.speed || 0.2,
             'Effect.Basic.base': presets.base || 0.05,
             'Effect.Stripe.waveStrength': presets.waveStrength || 0.7,
             'Effect.Stripe.waveFrequency': presets.waveFrequency || 4,
             'Effect.Stripe.wavePower': presets.wavePower || 2.0,
-            'Effect.Stripe.hStripeStrength': presets.hStripeStrength || 0.5,
-            'Effect.Stripe.vStripeStrength': presets.vStripeStrength || 0.27,
-            'Effect.Stripe.hStripeFreq': presets.hStripeFreq || 300,
-            'Effect.Stripe.vStripeFreq': presets.vStripeFreq || 400,
+            'Effect.Stripe.waveSpeed': presets.waveSpeed || 0.2, 
+            'Effect.Stripe.stripeStrength': presets.stripeStrength || { x: 0.27, y: 0.5 }, 
+            'Effect.Stripe.stripeFreq': presets.stripeFreq || { x: 400, y: 300 }, 
+            'Effect.Stripe.stripeSpeed': presets.stripeSpeed || { x: 0, y: 0 }, 
             'Effect.Fractal.fractalNoiseStrength': presets.fractalNoiseStrength || 0.6,
             'Effect.Fractal.fractalNoiseFreq': presets.fractalNoiseFreq || 1.2,
+            'Effect.Fractal.fractalSpeed': presets.fractalSpeed || 0.0, // Added fractalSpeed
             'Effect.Grain.grainFreqUpper': presets.grainFreqUpper || 800,
             'Effect.Grain.grainFreqLower': presets.grainFreqLower || 500,
             'Effect.Grain.grainBlur': presets.grainBlur || 0.001,
@@ -67,19 +67,21 @@ const Dust = ({ presets = {} }) => { // Ensure presets has a default value
 
     const uniforms = {
         uBase: controls.base,
-        uStripeStrength: new THREE.Vector2(controls.hStripeStrength, controls.vStripeStrength),
-        uStripeFreq: new THREE.Vector2(controls.hStripeFreq, controls.vStripeFreq),
+        uStripeStrength: new THREE.Vector2(controls.stripeStrength.x, controls.stripeStrength.y), 
+        uStripeFreq: new THREE.Vector2(controls.stripeFreq.x, controls.stripeFreq.y), 
         uWaveStrength: controls.waveStrength,
         uWaveFreq: controls.waveFrequency,
         uWavePower: controls.wavePower,
         uFractalNoiseStrength: controls.fractalNoiseStrength,
         uFractalNoiseFreq: controls.fractalNoiseFreq,
+        uFractalSpeed: controls.fractalSpeed,
         uEdgeSmoothness: new THREE.Vector2(controls.edgeSmoothnessTop, controls.edgeSmoothnessBottom),
         uSeparation: controls.separation,
         uColor: new THREE.Color(controls.color),
         uGrainFreq: new THREE.Vector2(controls.grainFreqUpper, controls.grainFreqLower),
         uGrainBlur: controls.grainBlur,
-        uSpeed: controls.speed,
+        uWaveSpeed: controls.waveSpeed, 
+        uStripeSpeed: new THREE.Vector2(controls.stripeSpeed.x, controls.stripeSpeed.y),
     };
 
     return (

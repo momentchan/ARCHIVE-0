@@ -8,7 +8,7 @@ import { posterData } from "../data/posterData";
 import { customTheme } from "../r3f-gist/theme/levaTheme";
 
 export default function App() {
-    const [posterIndex, setPosterIndex] = useState(0);
+    const [posterIndex, setPosterIndex] = useState(1);
 
     // Handle key press to cycle posters
     useEffect(() => {
@@ -32,7 +32,7 @@ export default function App() {
                 flat
                 theme={customTheme}
                 titleBar={{ filter: false, title: 'Menu' }}
-                collapsed={true} />
+                collapsed={false} />
 
             <Canvas
                 shadows
