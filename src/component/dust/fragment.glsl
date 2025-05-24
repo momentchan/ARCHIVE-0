@@ -7,15 +7,15 @@ precision highp float;
 
 varying vec2 vUv;
 uniform float uTime;
-uniform float uStripeBase;
+uniform float uBase;
 uniform vec2 uStripeStrength;
 uniform vec2 uStripeFreq;
 uniform float uWaveFreq;
 uniform float uWaveStrength;
 uniform float uWavePower;
 uniform vec2 uEdgeSmoothness;
-uniform float uNoiseThresholdRange;
-uniform vec2 uGrainFreq; // Use vec2 for separate frequencies for upper and lower sides
+uniform float uSeparation; 
+uniform vec2 uGrainFreq;
 uniform vec3 uColor;
 uniform float uGrainBlur;
 uniform float uSpeed;
@@ -40,7 +40,7 @@ float calculateBlurredGrain(vec2 uv) {
     for(float x = -1.0; x <= 1.0; x++) {
         for(float y = -1.0; y <= 1.0; y++) {
             vec2 offset = vec2(x, y) * blurSize;
-            grain += mix(0.0, grainNoise(uv + offset, uGrainFreq.y, vec2(.0, 1.)), smoothstep(uNoiseThresholdRange, 0.0, uv.y));
+            grain += mix(0.0, grainNoise(uv + offset, uGrainFreq.y, vec2(.0, 1.)), smoothstep(uSeparation, 0.0, uv.y)); // Updated to use uSeparation
         }
     }
     return grain / 9.0;
@@ -48,20 +48,17 @@ float calculateBlurredGrain(vec2 uv) {
 
 void main() {
     // Edge mask
-    float edgeMask = calculateEdgeMask(vUv, uEdgeSmoothness, uStripeBase);
+    float edgeMask = calculateEdgeMask(vUv, uEdgeSmoothness, uBase); 
 
     // Pattern layers
     float wave = calculateGradNoise(vec2(0.5, vUv.y), uWaveFreq, uSpeed, uWavePower, .0, uWaveStrength);
-
     float hStripe = calculateGradNoise(vec2(0.5, vUv.y), uStripeFreq.x, .0, 1., -.2, uStripeStrength.x);
-
     float vStripe = calculateGradNoise(vec2(vUv.x, 0.5), uStripeFreq.y, .0, 1., - 0.5, uStripeStrength.y);
-
     float noise = grainNoise(vUv, uGrainFreq.x, vec2(0.0, 0.05));
     float fNoise = (fbm2(vUv * uFractalNoiseFreq, uTime * uSpeed) - 0.0) * uFractalNoiseStrength;
 
     // Combine base pattern
-    float basePattern = uStripeBase + (hStripe * wave + vStripe * fNoise) + noise;
+    float basePattern = uBase + (hStripe + vStripe) * (wave + fNoise) + noise;
     basePattern *= edgeMask;
 
     // Add grain and finalize
