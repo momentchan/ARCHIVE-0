@@ -3,12 +3,14 @@ import { Center, Text } from '@react-three/drei';
 import { folder, useControls } from 'leva';
 import { fontPaths } from '../data/fonts';
 import { levaStore } from 'leva';
+import { useThree } from '@react-three/fiber';
 
 const Poster = ({ title = '', subtitle = '', description = '', presets = {}, children }) => {
     const collapsed = true;
     const fontKeys = Object.keys(fontPaths);
     const [currentFont, setCurrentFont] = useState(presets.font || fontKeys[0]);
     const prevPresetFont = useRef(presets.font);
+    const { gl } = useThree();
 
     const { backgroundColor } = useControls('Background', {
         backgroundColor: presets.backgroundColor || '#dfe2df',
@@ -65,7 +67,7 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
 
 
     useEffect(() => {
-        document.body.style.backgroundColor = backgroundColor;
+        gl.setClearColor(backgroundColor);
     }, [backgroundColor]);
 
     // Sync font from presets

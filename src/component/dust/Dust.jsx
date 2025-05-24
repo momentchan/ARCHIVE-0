@@ -29,7 +29,7 @@ const Dust = ({ presets = {} }) => { // Ensure presets has a default value
         Fractal: folder({
             fractalNoiseStrength: { value: presets.fractalNoiseStrength || 0.6, min: 0, max: 2, step: 0.01 },
             fractalNoiseFreq: { value: presets.fractalNoiseFreq || 1.2, min: 0, max: 10, step: 0.1 },
-            fractalSpeed: { value: presets.fractalSpeed || 0.2, min: 0, max: 1, step: 0.01 }, // Added fractalSpeed control
+            fractalSpeed: { value: presets.fractalSpeed || 0.2, min: 0, max: 5, step: 0.01 }, // Added fractalSpeed control
         }, { collapsed }),
 
         Edge: folder({
@@ -66,7 +66,7 @@ const Dust = ({ presets = {} }) => { // Ensure presets has a default value
             'Effect.Grain.grainBlur': presets.grainBlur || 0.0,
             'Effect.Grain.reseedChaos': presets.reseedChaos || 0.0,
             'Effect.Edge.separation': presets.separation || 0.35,
-            'Effect.Edge.edgeSmoothnessTop': presets.edgeSmoothnessTop || 0.01,
+            'Effect.Edge.edgeSmoothnessTop': presets.edgeSmoothnessTop || 0.0,
             'Effect.Edge.edgeSmoothnessBottom': presets.edgeSmoothnessBottom || 0.25,
         });
     }, [presets]);

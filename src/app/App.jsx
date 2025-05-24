@@ -6,9 +6,10 @@ import Poster from "../component/Poster";
 import Dust from "../component/dust/Dust";
 import { posterData } from "../data/posterData";
 import { customTheme } from "../r3f-gist/theme/levaTheme";
+import Utilities from "../r3f-gist/utility/Utilities";
 
 export default function App() {
-    const [posterIndex, setPosterIndex] = useState(1);
+    const [posterIndex, setPosterIndex] = useState(2);
 
     // Handle key press to cycle posters
     useEffect(() => {
@@ -59,6 +60,7 @@ export default function App() {
                 >
                     {({ presets }) => <Dust presets={presets} />}
                 </Poster>
+                <Utilities />
             </Canvas>
         </>
     );
