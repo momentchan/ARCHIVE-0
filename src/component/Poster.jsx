@@ -6,9 +6,11 @@ import { levaStore } from 'leva';
 import { useThree } from '@react-three/fiber';
 
 const Poster = ({ title = '', subtitle = '', description = '', presets = {}, children }) => {
-    const collapsed = true;
+    const collapsed = false;
     const fontKeys = Object.keys(fontPaths);
-    const [currentFont, setCurrentFont] = useState(presets.font || fontKeys[0]);
+    const [currentTitleFont, setCurrentTitleFont] = useState(presets.titleFont || fontKeys[0]); // Separate font for title
+    const [currentSubtitleFont, setCurrentSubtitleFont] = useState(presets.subtitleFont || fontKeys[0]); // Separate font for subtitle
+    const [currentDescriptionFont, setCurrentDescriptionFont] = useState(presets.descriptionFont || fontKeys[0]); // Separate font for description
     const prevPresetFont = useRef(presets.font);
     const { gl } = useThree();
 
@@ -17,29 +19,38 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
     }, { collapsed: true });
 
     const controls = useControls('Text', {
-        Basic: folder({
-            textColor: { value: presets.textColor || '#000000' },
-            textAlpha: { value: presets.textAlpha || 1, min: 0, max: 1, step: 0.01 },
-            font: {
-                value: currentFont,
-                options: fontKeys,
-                onChange: (value) => setCurrentFont(value),
-            },
-        }, { collapsed }),
         Title: folder({
             titleText: { value: title },
             titleSize: { value: presets.titleSize || 0.2, min: 0.1, max: 1, step: 0.01 },
-            titleSpacing: { value: presets.titleSpacing || 0.5, min: 0, max: 1, step: 0.01 },
+            titleSpacing: { value: presets.titleSpacing || 0.5, min: 0, max: 2, step: 0.01 },
+            titleColor: { value: presets.titleColor || '#ffffff' },
+            titleFont: {
+                value: currentTitleFont,
+                options: fontKeys,
+                onChange: (value) => setCurrentTitleFont(value), // Separate font control for title
+            },
         }, { collapsed }),
         Subtitle: folder({
             subtitleText: { value: subtitle },
             subtitleSize: { value: presets.subtitleSize || 0.1, min: 0.05, max: 0.5, step: 0.01 },
             subtitleSpacing: { value: presets.subtitleSpacing || 0, min: 0, max: 1, step: 0.01 },
+            subtitleColor: { value: presets.subtitleColor || '#cccccc' },
+            subtitleFont: {
+                value: currentSubtitleFont,
+                options: fontKeys,
+                onChange: (value) => setCurrentSubtitleFont(value), // Separate font control for subtitle
+            },
         }, { collapsed }),
         Description: folder({
             descriptionText: { value: description },
             descriptionSize: { value: presets.descriptionSize || 0.06, min: 0.02, max: 0.5, step: 0.01 },
             descriptionSpacing: { value: presets.descriptionSpacing || 0, min: 0, max: 1, step: 0.01 },
+            descriptionColor: { value: presets.descriptionColor || '#aaaaaa' },
+            descriptionFont: {
+                value: currentDescriptionFont,
+                options: fontKeys,
+                onChange: (value) => setCurrentDescriptionFont(value), // Separate font control for description
+            },
         }, { collapsed }),
     }, { collapsed });
 
@@ -48,20 +59,23 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
         levaStore.set({
             'Background.backgroundColor': presets.backgroundColor || '#dfe2df',
 
-            'Text.Basic.textColor': presets.textColor || '#000000',
-            'Text.Basic.textAlpha': presets.textAlpha,
-
             'Text.Title.titleText': title,
             'Text.Title.titleSize': presets.titleSize || 0.2,
             'Text.Title.titleSpacing': presets.titleSpacing || 0.5,
+            'Text.Title.titleColor': presets.titleColor || '#ffffff',
+            'Text.Title.titleFont': presets.titleFont || fontKeys[0], // Added titleFont
 
             'Text.Subtitle.subtitleText': subtitle,
             'Text.Subtitle.subtitleSize': presets.subtitleSize || 0.1,
             'Text.Subtitle.subtitleSpacing': presets.subtitleSpacing || 0,
+            'Text.Subtitle.subtitleColor': presets.subtitleColor || '#cccccc',
+            'Text.Subtitle.subtitleFont': presets.subtitleFont || fontKeys[0], // Added subtitleFont
 
             'Text.Description.descriptionText': description,
             'Text.Description.descriptionSize': presets.descriptionSize || 0.06,
             'Text.Description.descriptionSpacing': presets.descriptionSpacing || 0,
+            'Text.Description.descriptionColor': presets.descriptionColor || '#aaaaaa',
+            'Text.Description.descriptionFont': presets.descriptionFont || fontKeys[0], // Added descriptionFont
         });
     }, [title, subtitle, description, presets]);
 
@@ -70,35 +84,10 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
         gl.setClearColor(backgroundColor);
     }, [backgroundColor]);
 
-    // Sync font from presets
-    useEffect(() => {
-        if (presets.font && presets.font !== prevPresetFont.current) {
-            setCurrentFont(presets.font);
-            levaStore.set({ 'Text.Basic.font': presets.font });
-            prevPresetFont.current = presets.font;
-        }
-    }, [presets.font]);
-
-    // Cycle font with Space key
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            if (event.code === 'Space') {
-                const nextIndex = (fontKeys.indexOf(currentFont) + 1) % fontKeys.length;
-                const newFont = fontKeys[nextIndex];
-                setCurrentFont(newFont);
-                levaStore.set({ 'Text.Basic.font': newFont });
-            }
-        };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [currentFont, fontKeys]);
-
     // Shared Text Props
     const sharedTextProps = {
         'material-transparent': true,
         'material-opacity': controls.textAlpha,
-        color: controls.textColor,
-        font: fontPaths[currentFont],
         maxWidth: 2,
     };
 
@@ -110,6 +99,8 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
                 anchorX="center"
                 anchorY="middle"
                 letterSpacing={controls.titleSpacing}
+                color={controls.titleColor}
+                font={fontPaths[currentTitleFont]} // Applied titleFont
                 {...sharedTextProps}
             >
                 {controls.titleText}
@@ -122,17 +113,22 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
                     anchorX="left"
                     anchorY="middle"
                     letterSpacing={controls.subtitleSpacing}
+                    color={controls.subtitleColor}
+                    font={fontPaths[currentSubtitleFont]} // Applied subtitleFont
                     {...sharedTextProps}
                 >
                     {controls.subtitleText}
                 </Text>
                 <Text
-                    position={[0, -0.1, 0]}
+                    position={[0, -0.15, 0]}
                     fontSize={controls.descriptionSize}
                     textAlign="left"
                     anchorX="left"
                     anchorY="top"
                     letterSpacing={controls.descriptionSpacing}
+                    lineHeight={2}
+                    color={controls.descriptionColor}
+                    font={fontPaths[currentDescriptionFont]} // Applied descriptionFont
                     {...sharedTextProps}
                 >
                     {controls.descriptionText}

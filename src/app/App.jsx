@@ -9,7 +9,7 @@ import { customTheme } from "../r3f-gist/theme/levaTheme";
 import Utilities from "../r3f-gist/utility/Utilities";
 
 export default function App() {
-    const [posterIndex, setPosterIndex] = useState(2);
+    const [posterIndex, setPosterIndex] = useState(0);
 
     // Handle key press to cycle posters
     useEffect(() => {
