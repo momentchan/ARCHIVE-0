@@ -15,24 +15,27 @@ const basePresets = {
     // Effect
     dustColor: "#000000",
     base: 0.05,
-    waveStrength: 0.7,
-    waveFrequency: 4,
-    wavePower: 2.0,
-    waveSpeed: 0.2,
     stripeStrength: { x: 0.27, y: 0.5 },
     stripeFreq: { x: 400, y: 300 },
     stripeSpeed: { x: 0, y: 0 },
 
+    waveStrength: 0.7,
+    waveFrequency: 4,
+    wavePower: 2.0,
+    waveSpeed: 0.2,
+
     fractalNoiseStrength: 0.6,
     fractalNoiseFreq: 1.2,
-    fractalSpeed: 0.2, 
+    fractalSpeed: 0.2,
 
     separation: 0.35,
+    edgeSmoothnessTop: 0.01,
+    edgeSmoothnessBottom: 0.25,
+
     grainFreqUpper: 800,
     grainFreqLower: 500,
     grainBlur: 0.001,
-    edgeSmoothnessTop: 0.01,
-    edgeSmoothnessBottom: 0.25,
+    reseedChaos: 0,
 };
 
 export const posterData = [
@@ -48,6 +51,7 @@ In the static, in the absence, something lingers.`,
             font: "BodoniModa-Regular",
             textColor: "#000000",
             dustColor: "#000000",
+            waveSpeed: 0.3,
         }
     },
     {
@@ -85,6 +89,17 @@ An echo is not what was said, but what we refused to forget.`,
             font: "NotoSerifGeorgian-Regular",
             textColor: "#444444",
             dustColor: "#3b7372",
+            stripeStrength: { x: 0.52, y: 0 },
+            stripeFreq: { x: 400, y: 300 },
+            stripeSpeed: { x: 0.25, y: 0 },
+            waveStrength: 0,
+            fractalNoiseStrength: 1.7,
+            fractalNoiseFreq: 2.8,
+            fractalSpeed: 0.21,
+            separation: 0.37,
+            grainFreqUpper: 1000,
+            grainFreqLower: 1000,
+            grainBlur: 0
         }
     },
     {
@@ -112,6 +127,12 @@ In its presence, shadows find their purpose.`,
             font: "Montserrat-Regular",
             textColor: "#666666",
             dustColor: "#FFFF00",
+            backgroundColor: "#aec4a3",
+            stripeStrength: { x: 0.1, y: 0.1 },
+            grainFreqUpper: 10,
+            grainFreqLower: 40,
+            grainBlur: 0.0,
+            reseedChaos: 1,
         }
     }
 ];
