@@ -31,8 +31,8 @@ export default function App() {
             <Leva
                 flat
                 theme={customTheme}
-                titleBar={{ title: 'Setting', filter: false }}
-            />
+                titleBar={{ filter: false, title: 'Menu' }}
+                collapsed={true} />
 
             <Canvas
                 shadows

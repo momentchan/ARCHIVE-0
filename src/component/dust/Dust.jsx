@@ -4,37 +4,8 @@ import fragmentShader from './fragment.glsl';
 import { folder, levaStore, useControls } from 'leva';
 import * as THREE from 'three';
 
-const Dust = ({ presets }) => {
+const Dust = ({ presets = {} }) => { // Ensure presets has a default value
     const collapsed = true;
-
-    // Extracted function to set Leva store values
-    const setLevaStore = (presets) => {
-        const levaValues = {
-            'Effect.Basic.color': presets.dustColor || '#000000',
-            'Effect.Basic.speed': presets.speed || 0.2,
-            'Effect.Basic.base': presets.base || 0.05,
-            'Effect.Stripe.waveStrength': presets.waveStrength || 0.7,
-            'Effect.Stripe.waveFrequency': presets.waveFrequency || 4,
-            'Effect.Stripe.wavePower': presets.wavePower || 2.0,
-            'Effect.Stripe.hStripeStrength': presets.hStripeStrength || 0.5,
-            'Effect.Stripe.vStripeStrength': presets.vStripeStrength || 0.27,
-            'Effect.Stripe.hStripeFreq': presets.hStripeFreq || 300,
-            'Effect.Stripe.vStripeFreq': presets.vStripeFreq || 400,
-            'Effect.Fractal.fractalNoiseStrength': presets.fractalNoiseStrength || 0.6,
-            'Effect.Fractal.fractalNoiseFreq': presets.fractalNoiseFreq || 1.2,
-            'Effect.Fractal.separation': presets.separation || 0.35,
-            'Effect.Grain.grainFreqUpper': presets.grainFreqUpper || 800,
-            'Effect.Grain.grainFreqLower': presets.grainFreqLower || 500,
-            'Effect.Grain.grainBlur': presets.grainBlur || 0.001,
-            'Effect.Edge.edgeSmoothnessTop': presets.edgeSmoothnessTop || 0.01,
-            'Effect.Edge.edgeSmoothnessBottom': presets.edgeSmoothnessBottom || 0.25,
-        };
-        levaStore.set(levaValues);
-    };
-
-    useEffect(() => {
-        setLevaStore(presets);
-    }, [presets]);
 
     const controls = useControls('Effect', {
         Basic: folder({
@@ -70,6 +41,29 @@ const Dust = ({ presets }) => {
             grainBlur: { value: presets.grainBlur || 0.001, min: 0, max: 0.01, step: 0.001 },
         }, { collapsed }),
     }, { collapsed });
+
+    useEffect(() => {
+        levaStore.set({
+            'Effect.Basic.color': presets.dustColor || '#000000',
+            'Effect.Basic.speed': presets.speed || 0.2,
+            'Effect.Basic.base': presets.base || 0.05,
+            'Effect.Stripe.waveStrength': presets.waveStrength || 0.7,
+            'Effect.Stripe.waveFrequency': presets.waveFrequency || 4,
+            'Effect.Stripe.wavePower': presets.wavePower || 2.0,
+            'Effect.Stripe.hStripeStrength': presets.hStripeStrength || 0.5,
+            'Effect.Stripe.vStripeStrength': presets.vStripeStrength || 0.27,
+            'Effect.Stripe.hStripeFreq': presets.hStripeFreq || 300,
+            'Effect.Stripe.vStripeFreq': presets.vStripeFreq || 400,
+            'Effect.Fractal.fractalNoiseStrength': presets.fractalNoiseStrength || 0.6,
+            'Effect.Fractal.fractalNoiseFreq': presets.fractalNoiseFreq || 1.2,
+            'Effect.Grain.grainFreqUpper': presets.grainFreqUpper || 800,
+            'Effect.Grain.grainFreqLower': presets.grainFreqLower || 500,
+            'Effect.Grain.grainBlur': presets.grainBlur || 0.001,
+            'Effect.Edge.separation': presets.separation || 0.35,
+            'Effect.Edge.edgeSmoothnessTop': presets.edgeSmoothnessTop || 0.01,
+            'Effect.Edge.edgeSmoothnessBottom': presets.edgeSmoothnessBottom || 0.25,
+        });
+    }, [presets]);
 
     const uniforms = {
         uBase: controls.base,
