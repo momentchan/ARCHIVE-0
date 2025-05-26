@@ -7,9 +7,12 @@ import Dust from "../component/dust/Dust";
 import { posterData } from "../data/posterData";
 import { customTheme } from "../r3f-gist/theme/levaTheme";
 import Utilities from "../r3f-gist/utility/Utilities";
+import GlobalStates from "../r3f-gist/utility/GlobalStates";
+import useGlobalStore from "../r3f-gist/utility/useGlobalStore";
 
 export default function App() {
     const [posterIndex, setPosterIndex] = useState(0);
+    const { isMobile } = useGlobalStore();
 
     // Handle key press to cycle posters
     useEffect(() => {
@@ -29,17 +32,19 @@ export default function App() {
 
     return (
         <>
+            <GlobalStates />
+
             <Leva
                 flat
                 theme={customTheme}
                 titleBar={{ filter: false, title: 'Menu' }}
-                collapsed={false} />
+                collapsed={true} />
 
             <Canvas
                 shadows
                 orthographic
                 camera={{
-                    zoom: 150,
+                    zoom: isMobile ? 100 : 150,
                     position: [0, 0, 1],
                     near: 0.1,
                 }}

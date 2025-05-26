@@ -4,35 +4,8 @@ import fragmentShader from './fragment.glsl';
 import { folder, levaStore, useControls } from 'leva';
 import * as THREE from 'three';
 
-const Dust = ({ presets = {} }) => {
+const Dust = ({ presets = {} }) => { // Ensure presets has a default value
     const collapsed = true;
-
-    useEffect(() => {
-        levaStore.set({
-            'Effect.Basic.color': presets.dustColor || '#000000',
-            'Effect.Basic.base': presets.base || 0.05,
-            'Effect.Wave.waveStrength': presets.waveStrength || 0.7,
-            'Effect.Wave.waveFrequency': presets.waveFrequency || 4,
-            'Effect.Wave.wavePower': presets.wavePower || 2.0,
-            'Effect.Wave.waveSpeed': presets.waveSpeed || 0.2,
-            'Effect.Stripe.stripeStrength': presets.stripeStrength || { x: 0.27, y: 0.5 },
-            'Effect.Stripe.stripeFreq': presets.stripeFreq || { x: 400, y: 300 },
-            'Effect.Stripe.stripeSpeed': presets.stripeSpeed || { x: 0, y: 0 },
-            'Effect.Fractal.fractalNoiseStrength': presets.fractalNoiseStrength || 0.6,
-            'Effect.Fractal.fractalNoiseFreq': presets.fractalNoiseFreq || 1.2,
-            'Effect.Fractal.fractalSpeed': presets.fractalSpeed || 0.0, 
-            'Effect.Grain.grainFreqUpper': presets.grainFreqUpper || 800,
-            'Effect.Grain.grainFreqLower': presets.grainFreqLower || 500,
-            'Effect.Grain.grainBlur': presets.grainBlur || 0.0,
-            'Effect.Grain.reseedChaos': presets.reseedChaos || 0.0,
-            'Effect.Edge.separation': presets.separation || 0.35,
-            'Effect.Edge.edgeSmoothnessTop': presets.edgeSmoothnessTop || 0.0,
-            'Effect.Edge.edgeSmoothnessBottom': presets.edgeSmoothnessBottom || 0.25,
-            'Effect.Text.titleColor': presets.titleColor || '#ffffff',
-            'Effect.Text.subtitleColor': presets.subtitleColor || '#cccccc',
-            'Effect.Text.descriptionColor': presets.descriptionColor || '#aaaaaa',
-        });
-    }, [presets]);
 
     const controls = useControls('Effect', {
         Basic: folder({
@@ -72,13 +45,31 @@ const Dust = ({ presets = {} }) => {
             reseedChaos: { value: presets.reseedChaos || 0.0, min: 0, max: 1, step: 0.01 },
         }, { collapsed }),
 
-        Text: folder({
-            titleColor: { value: presets.titleColor || '#ffffff' },
-            subtitleColor: { value: presets.subtitleColor || '#cccccc' },
-            descriptionColor: { value: presets.descriptionColor || '#aaaaaa' },
-        }, { collapsed }),
-
     }, { collapsed });
+
+    useEffect(() => {
+        levaStore.set({
+            'Effect.Basic.color': presets.dustColor || '#000000',
+            'Effect.Basic.base': presets.base || 0.05,
+            'Effect.Wave.waveStrength': presets.waveStrength || 0.7,
+            'Effect.Wave.waveFrequency': presets.waveFrequency || 4,
+            'Effect.Wave.wavePower': presets.wavePower || 2.0,
+            'Effect.Wave.waveSpeed': presets.waveSpeed || 0.2,
+            'Effect.Stripe.stripeStrength': presets.stripeStrength || { x: 0.27, y: 0.5 },
+            'Effect.Stripe.stripeFreq': presets.stripeFreq || { x: 400, y: 300 },
+            'Effect.Stripe.stripeSpeed': presets.stripeSpeed || { x: 0, y: 0 },
+            'Effect.Fractal.fractalNoiseStrength': presets.fractalNoiseStrength || 0.6,
+            'Effect.Fractal.fractalNoiseFreq': presets.fractalNoiseFreq || 1.2,
+            'Effect.Fractal.fractalSpeed': presets.fractalSpeed || 0.0, 
+            'Effect.Grain.grainFreqUpper': presets.grainFreqUpper || 800,
+            'Effect.Grain.grainFreqLower': presets.grainFreqLower || 500,
+            'Effect.Grain.grainBlur': presets.grainBlur || 0.0,
+            'Effect.Grain.reseedChaos': presets.reseedChaos || 0.0,
+            'Effect.Edge.separation': presets.separation || 0.35,
+            'Effect.Edge.edgeSmoothnessTop': presets.edgeSmoothnessTop || 0.0,
+            'Effect.Edge.edgeSmoothnessBottom': presets.edgeSmoothnessBottom || 0.25,
+        });
+    }, [presets]);
 
     const uniforms = {
         uBase: controls.base,
@@ -98,9 +89,6 @@ const Dust = ({ presets = {} }) => {
         uWaveSpeed: controls.waveSpeed,
         uStripeSpeed: new THREE.Vector2(controls.stripeSpeed.x, controls.stripeSpeed.y),
         uReseedChaos: controls.reseedChaos,
-        uTitleColor: new THREE.Color(controls.titleColor),
-        uSubtitleColor: new THREE.Color(controls.subtitleColor),
-        uDescriptionColor: new THREE.Color(controls.descriptionColor),
     };
 
     return (

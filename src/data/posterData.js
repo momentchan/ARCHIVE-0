@@ -2,9 +2,9 @@ const basePresets = {
     backgroundColor: "#dfe2df",
 
     // Text
-    titleFont: "Inter-Regular", // Added titleFont
-    subtitleFont: "Inter-Regular", // Added subtitleFont
-    descriptionFont: "Inter-Regular", // Added descriptionFont
+    titleFont: "Inter-Regular",
+    subtitleFont: "Inter-Regular",
+    descriptionFont: "Inter-Regular",
     textAlpha: 1,
     titleSize: 0.2,
     subtitleSize: 0.1,
@@ -43,65 +43,63 @@ export const posterData = [
     {
         title: "NULL",
         subtitle: "SYSTEM INITIATION • JANUARY 1, 1970",
-        description: `No active signal.  
-Structural latency stable.  
-Void baseline confirmed.`,
+        description: `⟶ signal: none  
+⟶ system: stable  
+⟶ void: verified`,
         presets: {
             ...basePresets,
             font: "Inter-Regular",
-            titleFont: "Inter-Regular", // Added titleFont
-            subtitleFont: "Inter-Regular", // Added subtitleFont
-            descriptionFont: "Inter-Regular", // Added descriptionFont
+            titleFont: "Inter-Regular",
+            subtitleFont: "Inter-Regular",
+            descriptionFont: "Inter-Regular",
             dustColor: "#000000",
             waveSpeed: 0.3,
             titleColor: "#2F2F2F",
             subtitleColor: "#3C3C3C",
             descriptionColor: "#3A3A3A",
-            descriptionSize: 0.06,
+            descriptionSize: 0.08,
         }
     },
     {
-        title: "FALL",
-        subtitle: "EVENT LOG • DUMP ID: 3A74D2",
-        description: `Drift threshold exceeded.  
-Data decay: critical.  
-Signal weight detected in absence.`,
+        title: "TRACE",
+        subtitle: "REBUILD SEQUENCE • MAY 6, 2164",
+        description: `Recovered fragments: /log/trace_2164.bin  
+Reconstruction diverges from checksum.  
+⚠ Checksum mismatch.
+↳ trace_id: 0xB94FA2`,
         presets: {
             ...basePresets,
-            titleFont: "GFSDidot-Regular", // Added titleFont
-            subtitleFont: "GFSDidot-Regular", // Added subtitleFont
-            descriptionFont: "GFSDidot-Regular", // Added descriptionFont
-            dustColor: "#ffffff",
-            backgroundColor: "#282828",
-            titleSpacing: 2,
-            stripeStrength: { x: 0.27, y: 0.3 },
-            stripeFreq: { x: 5, y: 300 },
-            stripeSpeed: { x: -0.5, y: 0 },
-            fractalNoiseStrength: 1.5,
-            fractalNoiseFreq: 3.7,
-            waveSpeed: 0.47,
-            separation: 0.53,
-            grainFreqUpper: 350,
-            fractalSpeed: 0.47,
-            titleColor: "#E0E0E0",
-            subtitleColor: "#E6E6E6",
-            descriptionColor: "#CCCCCC",
-            subtitleSize: 0.12, 
-            descriptionSize: 0.07,
+            titleFont: "Montserrat-Regular",
+            subtitleFont: "Montserrat-Regular",
+            descriptionFont: "Inter-Regular",
+            dustColor: "#FFFF00",
+            backgroundColor: "#aec4a3",
+            stripeStrength: { x: 0.1, y: 0.1 },
+            grainFreqUpper: 10,
+            grainFreqLower: 40,
+            grainBlur: 0.0,
+            reseedChaos: 1,
+            titleColor: "#1A1A1A",
+            subtitleColor: "#222222",
+            descriptionColor: "#2A2A2A",
+            subtitleSize: 0.1,
+            descriptionSize: 0.065,
+            descriptionSpacing: 0.06,
         }
     },
     {
         title: "RESIDUE",
         subtitle: "AUDIO FRAGMENT • NOVEMBER 3, 1973",
-        description: `Audio fragment recovered from sector 04-C.  
-Timestamp mismatch: signal continuity incomplete.  
-Residual pattern stored as .dat , .json artifact.  
-Recovery complete. ⧗ sector=04-C | ts=1973.11.03-0341Z`,
+        description: `Audio pattern reconstructed.    
+Sector: 04-C   
+pts=1973.11.03-0341Z   
+Format: .dat / .json / unknown  
+↳ recovery complete ✖ signal corrupted`,
         presets: {
             ...basePresets,
-            titleFont: "EBGaramond-Regular", // Added titleFont
-            subtitleFont: "EBGaramond-Regular", // Added subtitleFont
-            descriptionFont: "EBGaramond-Regular", // Added descriptionFont
+            titleFont: "EBGaramond-Regular",
+            subtitleFont: "EBGaramond-Regular",
+            descriptionFont: "NotoSerifGeorgian-Regular",
             dustColor: "#39908f",
             stripeStrength: { x: 2, y: -2 },
             stripeFreq: { x: 60, y: 60 },
@@ -117,22 +115,25 @@ Recovery complete. ⧗ sector=04-C | ts=1973.11.03-0341Z`,
             edgeSmoothnessTop: 0.08,
             edgeSmoothnessBottom: 0.4,
             titleColor: "#333333",
+            titleSize: 0.22,
+            titleSpacing: 0.28,
             subtitleColor: "#323232",
             descriptionColor: "#444444",
-            descriptionSize: 0.08,
+            descriptionSize: 0.07,
         }
     },
     {
         title: "JAM",
-        subtitle: "SSIGX COLLISION • CODE: R-2099 ▒",
-        description: `When current stalls, ▒▒▒▒ fractures.  
-The machine stutt▓ers—and forgets to lie.  
-Distorti▚n becomes the clearest signal.`,
+        subtitle: "SIGX COLLISION • CODE: R-2099 ▓ • JULY 19, 2099",
+        description: `When current stalls, ▒▒▒ fractures.  
+The machine stutt▓ers—and forɢets to lie.  
+Distortɨon becomes the clearest signal.
+`,
         presets: {
             ...basePresets,
-            titleFont: "FiraCode-Regular", // Added titleFont
-            subtitleFont: "FiraCode-Regular", // Added subtitleFont
-            descriptionFont: "FiraCode-Regular", // Added descriptionFont
+            titleFont: "FiraCode-Regular",
+            subtitleFont: "FiraCode-Regular",
+            descriptionFont: "FiraCode-Regular",
             dustColor: "#ff5858",
             backgroundColor: "#000000",
             stripeStrength: { x: 0.5, y: 1.8 },
@@ -152,36 +153,42 @@ Distorti▚n becomes the clearest signal.`,
             grainBlur: 0.01,
             reseedChaos: 1,
             titleColor: "#F0F0F0",
+            titleSize: 0.25,
             subtitleColor: "#F0F0F0",
             descriptionColor: "#DDDDDD",
-            subtitleSize: 0.09, 
-            descriptionSize: 0.055,
-            titleSpacing: 2,
+            subtitleSize: 0.07,
+            descriptionSize: 0.065,
+            titleSpacing: 1.5,
         }
     },
     {
-        title: "TRACE",
-        subtitle: "REBUILD SEQUENCE • MAY 6, 2064",
-        description: `Recovered fragments: /log/trace_2064.bin  
-Reconstruction diverges from checksum.  
-Resulting pattern: synthesis.`,
+        title: "FALL",
+        subtitle: "SYSLOG ENTRY • ID#3A74D2 • MARCH 14, 1987",
+        description: `Drift anomaly threshold exceeded.  
+Data decay: critical.  
+Signal weight detected in absence.`,
         presets: {
             ...basePresets,
-            titleFont: "Montserrat-Regular", // Added titleFont
-            subtitleFont: "Montserrat-Regular", // Added subtitleFont
-            descriptionFont: "Montserrat-Regular", // Added descriptionFont
-            dustColor: "#FFFF00",
-            backgroundColor: "#aec4a3",
-            stripeStrength: { x: 0.1, y: 0.1 },
-            grainFreqUpper: 10,
-            grainFreqLower: 40,
-            grainBlur: 0.0,
-            reseedChaos: 1,
-            titleColor: "#1A1A1A",
-            subtitleColor: "#222222",
-            descriptionColor: "#2A2A2A",
-            subtitleSize: 0.09,
-            descriptionSize: 0.065,
+            titleFont: "GFSDidot-Regular",
+            subtitleFont: "GFSDidot-Regular",
+            descriptionFont: "GFSDidot-Regular",
+            dustColor: "#ffffff",
+            backgroundColor: "#282828",
+            titleSpacing: 1.3,
+            stripeStrength: { x: 0.27, y: 0.3 },
+            stripeFreq: { x: 5, y: 300 },
+            stripeSpeed: { x: -0.5, y: 0 },
+            fractalNoiseStrength: 1.5,
+            fractalNoiseFreq: 3.7,
+            waveSpeed: 0.47,
+            separation: 0.53,
+            grainFreqUpper: 350,
+            fractalSpeed: 0.47,
+            titleColor: "#E0E0E0",
+            subtitleColor: "#E6E6E6",
+            descriptionColor: "#CCCCCC",
+            subtitleSize: 0.085,
+            descriptionSize: 0.075,
         }
-    }
+    },
 ];

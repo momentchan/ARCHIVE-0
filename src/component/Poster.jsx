@@ -6,12 +6,11 @@ import { levaStore } from 'leva';
 import { useThree } from '@react-three/fiber';
 
 const Poster = ({ title = '', subtitle = '', description = '', presets = {}, children }) => {
-    const collapsed = false;
+    const collapsed = true;
     const fontKeys = Object.keys(fontPaths);
     const [currentTitleFont, setCurrentTitleFont] = useState(presets.titleFont || fontKeys[0]); // Separate font for title
     const [currentSubtitleFont, setCurrentSubtitleFont] = useState(presets.subtitleFont || fontKeys[0]); // Separate font for subtitle
     const [currentDescriptionFont, setCurrentDescriptionFont] = useState(presets.descriptionFont || fontKeys[0]); // Separate font for description
-    const prevPresetFont = useRef(presets.font);
     const { gl } = useThree();
 
     const { backgroundColor } = useControls('Background', {
@@ -21,36 +20,36 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
     const controls = useControls('Text', {
         Title: folder({
             titleText: { value: title },
-            titleSize: { value: presets.titleSize || 0.2, min: 0.1, max: 1, step: 0.01 },
-            titleSpacing: { value: presets.titleSpacing || 0.5, min: 0, max: 2, step: 0.01 },
-            titleColor: { value: presets.titleColor || '#ffffff' },
             titleFont: {
                 value: currentTitleFont,
                 options: fontKeys,
                 onChange: (value) => setCurrentTitleFont(value), // Separate font control for title
             },
+            titleSize: { value: presets.titleSize || 0.2, min: 0.1, max: 1, step: 0.01 },
+            titleSpacing: { value: presets.titleSpacing || 0.5, min: 0, max: 2, step: 0.01 },
+            titleColor: { value: presets.titleColor || '#ffffff' },
         }, { collapsed }),
         Subtitle: folder({
             subtitleText: { value: subtitle },
-            subtitleSize: { value: presets.subtitleSize || 0.1, min: 0.05, max: 0.5, step: 0.01 },
-            subtitleSpacing: { value: presets.subtitleSpacing || 0, min: 0, max: 1, step: 0.01 },
-            subtitleColor: { value: presets.subtitleColor || '#cccccc' },
             subtitleFont: {
                 value: currentSubtitleFont,
                 options: fontKeys,
-                onChange: (value) => setCurrentSubtitleFont(value), // Separate font control for subtitle
+                onChange: (value) => setCurrentSubtitleFont(value), 
             },
+            subtitleSize: { value: presets.subtitleSize || 0.1, min: 0.05, max: 0.5, step: 0.01 },
+            subtitleSpacing: { value: presets.subtitleSpacing || 0, min: 0, max: 1, step: 0.01 },
+            subtitleColor: { value: presets.subtitleColor || '#cccccc' },
         }, { collapsed }),
         Description: folder({
             descriptionText: { value: description },
-            descriptionSize: { value: presets.descriptionSize || 0.06, min: 0.02, max: 0.5, step: 0.01 },
-            descriptionSpacing: { value: presets.descriptionSpacing || 0, min: 0, max: 1, step: 0.01 },
-            descriptionColor: { value: presets.descriptionColor || '#aaaaaa' },
             descriptionFont: {
                 value: currentDescriptionFont,
                 options: fontKeys,
-                onChange: (value) => setCurrentDescriptionFont(value), // Separate font control for description
+                onChange: (value) => setCurrentDescriptionFont(value), 
             },
+            descriptionSize: { value: presets.descriptionSize || 0.06, min: 0.02, max: 0.5, step: 0.01 },
+            descriptionSpacing: { value: presets.descriptionSpacing || 0, min: 0, max: 1, step: 0.01 },
+            descriptionColor: { value: presets.descriptionColor || '#aaaaaa' },
         }, { collapsed }),
     }, { collapsed });
 
@@ -63,19 +62,19 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
             'Text.Title.titleSize': presets.titleSize || 0.2,
             'Text.Title.titleSpacing': presets.titleSpacing || 0.5,
             'Text.Title.titleColor': presets.titleColor || '#ffffff',
-            'Text.Title.titleFont': presets.titleFont || fontKeys[0], // Added titleFont
+            'Text.Title.titleFont': presets.titleFont || fontKeys[0], 
 
             'Text.Subtitle.subtitleText': subtitle,
             'Text.Subtitle.subtitleSize': presets.subtitleSize || 0.1,
             'Text.Subtitle.subtitleSpacing': presets.subtitleSpacing || 0,
             'Text.Subtitle.subtitleColor': presets.subtitleColor || '#cccccc',
-            'Text.Subtitle.subtitleFont': presets.subtitleFont || fontKeys[0], // Added subtitleFont
+            'Text.Subtitle.subtitleFont': presets.subtitleFont || fontKeys[0], 
 
             'Text.Description.descriptionText': description,
             'Text.Description.descriptionSize': presets.descriptionSize || 0.06,
             'Text.Description.descriptionSpacing': presets.descriptionSpacing || 0,
             'Text.Description.descriptionColor': presets.descriptionColor || '#aaaaaa',
-            'Text.Description.descriptionFont': presets.descriptionFont || fontKeys[0], // Added descriptionFont
+            'Text.Description.descriptionFont': presets.descriptionFont || fontKeys[0], 
         });
     }, [title, subtitle, description, presets]);
 
