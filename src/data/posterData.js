@@ -156,7 +156,7 @@ Distortɨon becomes the clearest signal.
             titleSize: 0.25,
             subtitleColor: "#F0F0F0",
             descriptionColor: "#DDDDDD",
-            subtitleSize: 0.07,
+            subtitleSize: 0.068,
             descriptionSize: 0.065,
             titleSpacing: 1.5,
         }
@@ -187,7 +187,7 @@ Signal weight detected in absence.`,
             titleColor: "#E0E0E0",
             subtitleColor: "#E6E6E6",
             descriptionColor: "#CCCCCC",
-            subtitleSize: 0.085,
+            subtitleSize: 0.082,
             descriptionSize: 0.075,
         }
     },

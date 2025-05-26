@@ -55,7 +55,10 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
         }, { collapsed }),
     }, { collapsed });
 
-    const { displayedText } = useTypewriter(controls.descriptionText, controls.typingSpeed);
+    const { displayedTexts } = useTypewriter(
+        [controls.subtitleText, controls.descriptionText],
+        controls.typingSpeed
+    );
 
     // Sync Leva when props or presets change
     useEffect(() => {
@@ -120,7 +123,7 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
                     font={fontPaths[currentSubtitleFont]} // Applied subtitleFont
                     {...sharedTextProps}
                 >
-                    {controls.subtitleText}
+                    {displayedTexts[0]}
                 </Text>
                 <Text
                     position={[0, -0.15, 0]}
@@ -134,7 +137,7 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
                     font={fontPaths[currentDescriptionFont]} // Applied descriptionFont
                     {...sharedTextProps}
                 >
-                    {displayedText}
+                    {displayedTexts[1]}
                 </Text>
             </Center>
 
