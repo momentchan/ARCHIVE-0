@@ -1,0 +1,66 @@
+.entry-screen {
+    position: fixed;
+    z-index: 999;
+    inset: 0;
+    background: black;
+    color: #ccc;
+    font-family: 'IBM Plex Mono', monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1s ease;
+}
+
+.entry-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.entry-screen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.entry-text {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+    /* 只水平置中，不垂直 */
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.entry-text p {
+    white-space: pre-line;
+}
+
+.entry-title {
+    color: #fff;
+    transition: color 0.3s ease;
+    pointer-events: none;
+}
+
+.entry-hint {
+    color: #666;
+    font-size: 14px;
+    opacity: 0;
+    animation: hint-fade-in 0.5s ease 0.5s forwards;
+    cursor: pointer;
+}
+
+.entry-hint:hover {
+    color: #ccc;
+}
+
+@keyframes hint-fade-in {
+    to {
+        opacity: 1;
+    }
+}

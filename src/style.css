@@ -7,6 +7,7 @@ body,
     width: 100%;
     height: 100%;
     overflow: hidden;
+    cursor: text;
 }
 
 [class*="leva-t-"]:has(> div[style*="height: 0px"]) {
@@ -25,4 +26,29 @@ body,
 
 [class*="leva-t-"] {
     left: 10px;
+}
+
+.custom-cursor {
+    position: fixed;
+    pointer-events: none;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #0f0;
+    border-radius: 2px;
+    box-shadow: 0 0 6px #0f08;
+    transition: transform 0.1s ease;
+    animation: pulse 1s infinite alternate;
+    z-index: 9999;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.4;
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
 }

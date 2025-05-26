@@ -1,11 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
 
-export const useTypewriter = (texts, speed = 50) => {
+export const useTypewriter = (texts, speed = 50, onComplete, keepCursor = false) => {
     const [displayedTexts, setDisplayedTexts] = useState([]);
     const [textIndex, setTextIndex] = useState(0);
     const [charIndex, setCharIndex] = useState(0);
     const [cursorVisible, setCursorVisible] = useState(true);
     const [isTypingDone, setIsTypingDone] = useState(false);
+    const [hasCalledComplete, setHasCalledComplete] = useState(false);
 
     const textsKey = useMemo(() => JSON.stringify(texts), [texts]);
 
@@ -60,20 +61,30 @@ export const useTypewriter = (texts, speed = 50) => {
     }, [textIndex, texts.length]);
 
     useEffect(() => {
-        if (isTypingDone) return;
+        if (isTypingDone && !hasCalledComplete) {
+            setHasCalledComplete(true);
+            if (typeof onComplete === 'function') {
+                onComplete();
+            }
+        }
+    }, [isTypingDone, hasCalledComplete, onComplete]);
+
+    useEffect(() => {
+        if (isTypingDone && !keepCursor) return;
 
         const blink = setInterval(() => {
             setCursorVisible(v => !v);
         }, 500);
 
         return () => clearInterval(blink);
-    }, [isTypingDone]);
+    }, [isTypingDone, keepCursor]);
 
     const rendered = [...displayedTexts];
 
-    if (!isTypingDone) {
+    const shouldShowCursor = !isTypingDone || keepCursor;
+    if (shouldShowCursor) {
         rendered[textIndex] += cursorVisible ? '▌' : ' ';
     }
-
+    
     return { displayedTexts: rendered };
 };

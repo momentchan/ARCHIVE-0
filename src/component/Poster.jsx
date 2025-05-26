@@ -4,7 +4,6 @@ import { folder, useControls } from 'leva';
 import { fontPaths } from '../data/fonts';
 import { levaStore } from 'leva';
 import { useThree } from '@react-three/fiber';
-import { useTypewriter } from '../hooks/useTypewriter';
 
 const Poster = ({ title = '', subtitle = '', description = '', presets = {}, children }) => {
     const collapsed = true;
@@ -35,7 +34,7 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
             subtitleFont: {
                 value: currentSubtitleFont,
                 options: fontKeys,
-                onChange: (value) => setCurrentSubtitleFont(value), 
+                onChange: (value) => setCurrentSubtitleFont(value),
             },
             subtitleSize: { value: presets.subtitleSize || 0.1, min: 0.05, max: 0.5, step: 0.01 },
             subtitleSpacing: { value: presets.subtitleSpacing || 0, min: 0, max: 1, step: 0.01 },
@@ -46,21 +45,14 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
             descriptionFont: {
                 value: currentDescriptionFont,
                 options: fontKeys,
-                onChange: (value) => setCurrentDescriptionFont(value), 
+                onChange: (value) => setCurrentDescriptionFont(value),
             },
             descriptionSize: { value: presets.descriptionSize || 0.06, min: 0.02, max: 0.5, step: 0.01 },
             descriptionSpacing: { value: presets.descriptionSpacing || 0, min: 0, max: 1, step: 0.01 },
             descriptionColor: { value: presets.descriptionColor || '#aaaaaa' },
-            typingSpeed: { value: 50, min: 10, max: 200, step: 1 },
         }, { collapsed }),
     }, { collapsed });
 
-    const { displayedTexts } = useTypewriter(
-        [controls.subtitleText, controls.descriptionText],
-        controls.typingSpeed
-    );
-
-    // Sync Leva when props or presets change
     useEffect(() => {
         levaStore.set({
             'Background.backgroundColor': presets.backgroundColor || '#dfe2df',
@@ -69,19 +61,19 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
             'Text.Title.titleSize': presets.titleSize || 0.2,
             'Text.Title.titleSpacing': presets.titleSpacing || 0.5,
             'Text.Title.titleColor': presets.titleColor || '#ffffff',
-            'Text.Title.titleFont': presets.titleFont || fontKeys[0], 
+            'Text.Title.titleFont': presets.titleFont || fontKeys[0],
 
             'Text.Subtitle.subtitleText': subtitle,
             'Text.Subtitle.subtitleSize': presets.subtitleSize || 0.1,
             'Text.Subtitle.subtitleSpacing': presets.subtitleSpacing || 0,
             'Text.Subtitle.subtitleColor': presets.subtitleColor || '#cccccc',
-            'Text.Subtitle.subtitleFont': presets.subtitleFont || fontKeys[0], 
+            'Text.Subtitle.subtitleFont': presets.subtitleFont || fontKeys[0],
 
             'Text.Description.descriptionText': description,
             'Text.Description.descriptionSize': presets.descriptionSize || 0.06,
             'Text.Description.descriptionSpacing': presets.descriptionSpacing || 0,
             'Text.Description.descriptionColor': presets.descriptionColor || '#aaaaaa',
-            'Text.Description.descriptionFont': presets.descriptionFont || fontKeys[0], 
+            'Text.Description.descriptionFont': presets.descriptionFont || fontKeys[0],
         });
     }, [title, subtitle, description, presets]);
 
@@ -123,7 +115,7 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
                     font={fontPaths[currentSubtitleFont]} // Applied subtitleFont
                     {...sharedTextProps}
                 >
-                    {displayedTexts[0]}
+                    {controls.subtitleText}
                 </Text>
                 <Text
                     position={[0, -0.15, 0]}
@@ -137,7 +129,7 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
                     font={fontPaths[currentDescriptionFont]} // Applied descriptionFont
                     {...sharedTextProps}
                 >
-                    {displayedTexts[1]}
+                    {controls.descriptionText}
                 </Text>
             </Center>
 

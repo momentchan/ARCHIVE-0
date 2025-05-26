@@ -10,8 +10,11 @@ import Utilities from "../r3f-gist/utility/Utilities";
 import GlobalStates from "../r3f-gist/utility/GlobalStates";
 import useGlobalStore from "../r3f-gist/utility/useGlobalStore";
 import PosterSelector from "../component/PosterSelector";
+import EntryPage from "../component/EntryPage";
 
 export default function App() {
+    const [entered, setEntered] = useState(false);
+
     const [posterIndex, setPosterIndex] = useState(0);
     const { isMobile } = useGlobalStore();
 
@@ -31,55 +34,49 @@ export default function App() {
 
     const currentPoster = posterData[posterIndex];
 
-
-
     return (
         <>
             <GlobalStates />
-            <PosterSelector
-                current={currentPoster.title.toLowerCase()}  // 對應 POSTER 的 id（例如 'null'）
-                onSelect={(id) => {
-                    const index = posterData.findIndex(p => p.title.toLowerCase() === id);
-                    if (index !== -1) {
-                        setPosterIndex(index);
-                    }
-                }}
-            />
+            {!entered && <EntryPage onFinish={() => setEntered(true)} />}
 
-            <Leva
-                hidden
-                flat
-                theme={customTheme}
-                titleBar={{ filter: false, title: 'Menu' }}
-                collapsed={true} />
-
-            <Canvas
-                shadows
-                orthographic
-                camera={{
-                    zoom: isMobile ? 100 : 150,
-                    position: [0, 0, 1],
-                    near: 0.1,
-                }}
-                gl={{ preserveDrawingBuffer: true }}
-            >
-                <CameraControls
-                    makeDefault
-                    azimuthRotateSpeed={0}
-                    polarRotateSpeed={0}
-                    truckSpeed={0}
-                />
-
-                <Poster
-                    title={currentPoster.title}
-                    subtitle={currentPoster.subtitle}
-                    description={currentPoster.description}
-                    presets={currentPoster.presets}
-                >
-                    {({ presets }) => <Dust presets={presets} />}
-                </Poster>
-                <Utilities />
-            </Canvas>
+            {entered && (
+                <>
+                    <PosterSelector
+                        current={currentPoster.title.toLowerCase()}
+                        onSelect={(id) => {
+                            const index = posterData.findIndex(p => p.title.toLowerCase() === id);
+                            if (index !== -1) setPosterIndex(index);
+                        }}
+                    />
+                    <Leva hidden flat theme={customTheme} titleBar={{ filter: false, title: 'Menu' }} collapsed={true} />
+                    <Canvas
+                        shadows
+                        orthographic
+                        camera={{
+                            zoom: isMobile ? 100 : 150,
+                            position: [0, 0, 1],
+                            near: 0.1,
+                        }}
+                        gl={{ preserveDrawingBuffer: true }}
+                    >
+                        <CameraControls
+                            makeDefault
+                            azimuthRotateSpeed={0}
+                            polarRotateSpeed={0}
+                            truckSpeed={0}
+                        />
+                        <Poster
+                            title={currentPoster.title}
+                            subtitle={currentPoster.subtitle}
+                            description={currentPoster.description}
+                            presets={currentPoster.presets}
+                        >
+                            {({ presets }) => <Dust presets={presets} />}
+                        </Poster>
+                        <Utilities />
+                    </Canvas>
+                </>
+            )}
         </>
     );
 }
