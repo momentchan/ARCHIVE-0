@@ -9,6 +9,7 @@ import { customTheme } from "../r3f-gist/theme/levaTheme";
 import Utilities from "../r3f-gist/utility/Utilities";
 import GlobalStates from "../r3f-gist/utility/GlobalStates";
 import useGlobalStore from "../r3f-gist/utility/useGlobalStore";
+import PosterSelector from "../component/PosterSelector";
 
 export default function App() {
     const [posterIndex, setPosterIndex] = useState(0);
@@ -30,11 +31,23 @@ export default function App() {
 
     const currentPoster = posterData[posterIndex];
 
+
+
     return (
         <>
             <GlobalStates />
+            <PosterSelector
+                current={currentPoster.title.toLowerCase()}  // 對應 POSTER 的 id（例如 'null'）
+                onSelect={(id) => {
+                    const index = posterData.findIndex(p => p.title.toLowerCase() === id);
+                    if (index !== -1) {
+                        setPosterIndex(index);
+                    }
+                }}
+            />
 
             <Leva
+                hidden
                 flat
                 theme={customTheme}
                 titleBar={{ filter: false, title: 'Menu' }}

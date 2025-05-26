@@ -1,0 +1,122 @@
+.poster-selector {
+    font-family: 'IBM Plex Mono', monospace;
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 10;
+    background: #111;
+    padding: 12px 16px;
+    border-radius: 8px;
+    color: white;
+    width: auto;
+    max-width: 100%;
+    opacity: 0.2;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.poster-selector.closed {
+    max-height: 42px;
+}
+
+.poster-selector.open {
+    max-height: 500px;
+}
+
+.poster-selector:hover {
+    opacity: 0.3;
+}
+
+.selector-header-btn {
+    all: unset;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #fff;
+    width: 100%;
+    padding: 6px 0;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 1s ease;
+    border-bottom: 1px solid transparent;
+}
+
+.poster-selector.closed .selector-header-btn {
+    border-bottom: none;
+}
+
+.poster-selector.open .selector-header-btn {
+    border-bottom-color: #999;
+}
+
+.selector-header-btn .title {
+    white-space: nowrap;
+}
+
+.selector-header-btn .caret {
+    font-size: 10px;
+    margin-left: 5px;
+}
+
+.selector-entries-wrapper {
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  max-height: 500px;
+  opacity: 1;
+  position: relative;
+}
+
+.poster-selector.closed .selector-entries-wrapper {
+  max-height: 0;
+  opacity: 0;
+  position: absolute;     /* ← removes from layout */
+  pointer-events: none;   /* ← disables interaction */
+  width: 100%;            /* ← keeps internal layout intact */
+}
+
+.poster-selector.open .selector-entries-wrapper {
+    max-height: 500px;
+    opacity: 1;
+}
+
+.selector-entries {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.entry {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: #eee;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.entry:hover {
+    background-color: #222;
+}
+
+.entry.active {
+    background-color: #eee;
+    color: #000;
+}
+
+.arrow {
+    width: 24px;
+}
+
+.label {
+    font-weight: bold;
+    letter-spacing: 0.05em;
+}
+
+.detail {
+    opacity: 0.7;
+    font-size: 0.9em;
+}
