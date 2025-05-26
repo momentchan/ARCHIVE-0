@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Center, Text } from '@react-three/drei';
 import { folder, useControls } from 'leva';
 import { fontPaths } from '../data/fonts';
 import { levaStore } from 'leva';
 import { useThree } from '@react-three/fiber';
+import { useTypewriter } from '../hooks/useTypewriter';
 
 const Poster = ({ title = '', subtitle = '', description = '', presets = {}, children }) => {
     const collapsed = true;
@@ -50,8 +51,11 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
             descriptionSize: { value: presets.descriptionSize || 0.06, min: 0.02, max: 0.5, step: 0.01 },
             descriptionSpacing: { value: presets.descriptionSpacing || 0, min: 0, max: 1, step: 0.01 },
             descriptionColor: { value: presets.descriptionColor || '#aaaaaa' },
+            typingSpeed: { value: 50, min: 10, max: 200, step: 1 },
         }, { collapsed }),
     }, { collapsed });
+
+    const { displayedText } = useTypewriter(controls.descriptionText, controls.typingSpeed);
 
     // Sync Leva when props or presets change
     useEffect(() => {
@@ -130,7 +134,7 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
                     font={fontPaths[currentDescriptionFont]} // Applied descriptionFont
                     {...sharedTextProps}
                 >
-                    {controls.descriptionText}
+                    {displayedText}
                 </Text>
             </Center>
 

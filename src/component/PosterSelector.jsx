@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import '../PosterSelector.css';
 
 const POSTERS = [
@@ -11,13 +11,25 @@ const POSTERS = [
 
 export default function PosterSelector({ current, onSelect }) {
     const [open, setOpen] = useState(true);
+    const containerRef = useRef(null);
 
     useEffect(() => {
         if (window.innerWidth < 768) setOpen(false);
     }, []);
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (containerRef.current && !containerRef.current.contains(event.target)) {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
     return (
-        <div className={`poster-selector ${open ? 'open' : 'closed'}`}>
+        <div ref={containerRef} className={`poster-selector ${open ? 'open' : 'closed'}`}>
             <button
                 className="selector-header-btn"
                 onClick={() => setOpen(!open)}

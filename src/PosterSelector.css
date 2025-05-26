@@ -10,7 +10,7 @@
     color: white;
     width: auto;
     max-width: 100%;
-    opacity: 0.2;
+    opacity: 0.3;
     transition: all 0.3s ease;
     overflow: hidden;
 }
@@ -24,7 +24,7 @@
 }
 
 .poster-selector:hover {
-    opacity: 0.3;
+    opacity: 0.4;
 }
 
 .selector-header-btn {
@@ -55,7 +55,7 @@
 
 .selector-header-btn .caret {
     font-size: 10px;
-    margin-left: 5px;
+    margin-left: 8px;
 }
 
 .selector-entries-wrapper {
@@ -89,7 +89,7 @@
 .entry {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
     padding: 6px 10px;
     font-size: 12px;
     color: #eee;
@@ -108,7 +108,7 @@
 }
 
 .arrow {
-    width: 24px;
+    width: 12px;
 }
 
 .label {
