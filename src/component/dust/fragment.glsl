@@ -24,6 +24,7 @@ uniform float uFractalNoiseStrength;
 uniform float uFractalNoiseFreq;
 uniform float uFractalSpeed;
 uniform float uReseedChaos;
+uniform float uAlpha;
 
 float calculateEdgeMask(vec2 uv, vec2 smoothness, float baseValue) {
     float verticalEdge = remap(smoothstep(0.0, smoothness.x, 1.0 - uv.y), vec2(0.0, 1.0), vec2(baseValue, 1.0));
@@ -88,5 +89,5 @@ void main() {
     vec3 finalColor = uColor * (1.0 - finalPattern);
 
     float alpha = (1.0 - finalPattern) * smoothstep(0.0, uEdgeSmoothness.y, vUv.y);
-    gl_FragColor = vec4(finalColor, alpha);
+    gl_FragColor = vec4(finalColor, alpha * uAlpha);
 }

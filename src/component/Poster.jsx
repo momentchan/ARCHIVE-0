@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Center, Text } from '@react-three/drei';
 import { folder, useControls } from 'leva';
 import { fontPaths } from '../data/fonts';
 import { levaStore } from 'leva';
-import { useThree } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
+import * as THREE from 'three';
 
 const Poster = ({ title = '', subtitle = '', description = '', presets = {}, children }) => {
     const collapsed = true;
@@ -11,6 +12,7 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
     const [currentTitleFont, setCurrentTitleFont] = useState(presets.titleFont || fontKeys[0]); // Separate font for title
     const [currentSubtitleFont, setCurrentSubtitleFont] = useState(presets.subtitleFont || fontKeys[0]); // Separate font for subtitle
     const [currentDescriptionFont, setCurrentDescriptionFont] = useState(presets.descriptionFont || fontKeys[0]); // Separate font for description
+    const [animAlpha, setAnimAlpha] = useState(0);
     const { gl } = useThree();
 
     const { backgroundColor } = useControls('Background', {
@@ -75,17 +77,39 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
             'Text.Description.descriptionColor': presets.descriptionColor || '#aaaaaa',
             'Text.Description.descriptionFont': presets.descriptionFont || fontKeys[0],
         });
+
+        // Animate opacity from 0 to 1
+        setAnimAlpha(0);
+        let start = performance.now();
+        const duration = 500;
+
+        const animate = (now) => {
+            const elapsed = now - start;
+            const t = Math.min(elapsed / duration, 1);
+            setAnimAlpha(t);
+            if (t < 1) requestAnimationFrame(animate);
+        };
+
+        requestAnimationFrame(animate);
     }, [title, subtitle, description, presets]);
 
+    const prevColor = useRef(new THREE.Color('white'));
+    const targetColor = useMemo(() => new THREE.Color(backgroundColor), [backgroundColor]);
 
     useEffect(() => {
-        gl.setClearColor(backgroundColor);
-    }, [backgroundColor]);
+        if (animAlpha < 1) {
+            prevColor.current.copy(prevColor.current.clone().lerp(targetColor, animAlpha));
+            gl.setClearColor(prevColor.current);
+        } else {
+            prevColor.current.copy(targetColor);
+            gl.setClearColor(targetColor);
+        }
+    }, [animAlpha]);
 
     // Shared Text Props
     const sharedTextProps = {
         'material-transparent': true,
-        'material-opacity': controls.textAlpha,
+        'material-opacity': animAlpha,
         maxWidth: 2,
     };
 
@@ -133,7 +157,7 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
                 </Text>
             </Center>
 
-            {typeof children === 'function' ? children({ presets }) : children}
+            {typeof children === 'function' ? children({ presets, animAlpha: animAlpha }) : children}
         </Center>
     );
 };

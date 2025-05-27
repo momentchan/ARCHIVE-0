@@ -4,7 +4,8 @@ import fragmentShader from './fragment.glsl';
 import { folder, levaStore, useControls } from 'leva';
 import * as THREE from 'three';
 
-const Dust = ({ presets = {} }) => { // Ensure presets has a default value
+const Dust = ({ presets = {}, animAlpha }) => { // Ensure presets has a default value
+    
     const collapsed = false;
 
     const controls = useControls('Effect', {
@@ -89,6 +90,7 @@ const Dust = ({ presets = {} }) => { // Ensure presets has a default value
         uWaveSpeed: controls.waveSpeed,
         uStripeSpeed: new THREE.Vector2(controls.stripeSpeed.x, controls.stripeSpeed.y),
         uReseedChaos: controls.reseedChaos,
+        uAlpha: animAlpha,
     };
 
     return (

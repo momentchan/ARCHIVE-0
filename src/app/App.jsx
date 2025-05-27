@@ -89,7 +89,7 @@ export default function App() {
                         description={currentPoster.description}
                         presets={currentPoster.presets}
                     >
-                        {({ presets }) => <Dust presets={presets} />}
+                        {({ presets, animAlpha }) => <Dust presets={presets} animAlpha={animAlpha} />}
                     </Poster>
                     <Utilities />
                 </Canvas>
