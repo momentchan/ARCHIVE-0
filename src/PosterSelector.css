@@ -15,14 +15,6 @@
     overflow: hidden;
 }
 
-.poster-selector.closed {
-    max-height: 42px;
-}
-
-.poster-selector.open {
-    max-height: 500px;
-}
-
 .poster-selector:hover {
     opacity: 0.4;
 }
@@ -60,7 +52,7 @@
 
 .selector-entries-wrapper {
   overflow: hidden;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
+  transition: max-height 0.2s ease, opacity 0.2s ease;
   max-height: 500px;
   opacity: 1;
   position: relative;
@@ -69,9 +61,6 @@
 .poster-selector.closed .selector-entries-wrapper {
   max-height: 0;
   opacity: 0;
-  position: absolute;     /* ← removes from layout */
-  pointer-events: none;   /* ← disables interaction */
-  width: 100%;            /* ← keeps internal layout intact */
 }
 
 .poster-selector.open .selector-entries-wrapper {

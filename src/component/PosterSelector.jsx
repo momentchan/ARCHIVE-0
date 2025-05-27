@@ -11,7 +11,7 @@ const POSTERS = [
 ];
 
 export default function PosterSelector({ current, onSelect }) {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const containerRef = useRef(null);
 
     useKeyboardNavigation(current, POSTERS, onSelect);
