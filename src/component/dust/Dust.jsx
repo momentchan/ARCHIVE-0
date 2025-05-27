@@ -6,12 +6,12 @@ import * as THREE from 'three';
 
 const Dust = ({ presets = {}, animAlpha }) => { // Ensure presets has a default value
     
-    const collapsed = false;
+    const collapsed = true;
 
     const controls = useControls('Effect', {
         Basic: folder({
             color: { value: presets.dustColor || '#000000' },
-            base: { value: presets.base || 0.05, min: 0, max: 1, step: 0.01 },
+            base: { value: presets.base || 0.05, min: -1, max: 1, step: 0.01 },
         }, { collapsed }),
 
         Stripe: folder({
@@ -21,9 +21,9 @@ const Dust = ({ presets = {}, animAlpha }) => { // Ensure presets has a default 
         }, { collapsed }),
 
         Wave: folder({
-            waveStrength: { value: presets.waveStrength || 0.7, min: 0, max: 1, step: 0.01 },
+            waveStrength: { value: presets.waveStrength || 0.7, min: 0, max: 5, step: 0.01 },
             waveFrequency: { value: presets.waveFrequency || 4, min: 1, max: 10, step: 0.1 },
-            wavePower: { value: presets.wavePower || 2.0, min: 1, max: 5, step: 0.1 },
+            wavePower: { value: presets.wavePower || 2.0, min: 1, max: 10, step: 0.1 },
             waveSpeed: { value: presets.waveSpeed || 0.2, min: -1, max: 1, step: 0.01 },
         }, { collapsed }),
 

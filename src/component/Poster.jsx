@@ -114,7 +114,7 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
     };
 
     return (
-        <Center position={[0, 0.2, 0.1]}>
+        <Center position={[0, 0.3, 0.1]}>
             <Text
                 position={[0, -1.35, 0]}
                 fontSize={controls.titleSize}

@@ -13,6 +13,7 @@ import PosterSelector from "../component/PosterSelector";
 
 export default function App() {
     const [posterIndex, setPosterIndex] = useState(0);
+    const [levaHidden, setLevaHidden] = useState(true); // Add state for Leva visibility
     const { isMobile } = useGlobalStore();
     const currentPoster = posterData[posterIndex];
 
@@ -51,22 +52,44 @@ export default function App() {
         };
     }, []);
 
+    // Add keyboard handler for Leva visibility
+    useEffect(() => {
+        const handleKeyPress = (e) => {
+            if (e.key.toLowerCase() === 'h') {
+                setLevaHidden(prev => !prev);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyPress);
+        return () => window.removeEventListener('keydown', handleKeyPress);
+    }, []);
+
+    const handlePosterSelect = (id) => {
+        const index = posterData.findIndex(p => p.title.toLowerCase() === id);
+        if (index !== -1) setPosterIndex(index);
+    };
+
     return (
         <>
             <>
                 <GlobalStates />
 
                 {isMobile ? (
-                    <div className="swipe-hint">← SWIPE →</div>
-                ) : <PosterSelector
-                    current={currentPoster.title.toLowerCase()}
-                    onSelect={(id) => {
-                        const index = posterData.findIndex(p => p.title.toLowerCase() === id);
-                        if (index !== -1) setPosterIndex(index);
-                    }}
-                />}
+                    <div className="swipe-hint glitch">← SWIPE →</div>
+                ) : (
+                    <PosterSelector
+                        current={currentPoster.title.toLowerCase()}
+                        onSelect={handlePosterSelect}
+                    />
+                )}
 
-                <Leva hidden flat theme={customTheme} titleBar={{ filter: false, title: 'Menu' }} collapsed={false} />
+                <Leva
+                    hidden={levaHidden}
+                    flat
+                    theme={customTheme}
+                    titleBar={{ filter: false, title: 'Menu' }}
+                    collapsed={false}
+                />
                 <Canvas
                     shadows
                     orthographic

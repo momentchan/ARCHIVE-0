@@ -53,13 +53,16 @@ export const posterData = [
             subtitleFont: "Inter-Regular",
             descriptionFont: "Inter-Regular",
             dustColor: "#000000",
-            waveSpeed: 0.3,
             titleColor: "#2F2F2F",
             subtitleColor: "#3C3C3C",
             descriptionColor: "#3A3A3A",
-            descriptionSize: 0.08,
-            waveStrength: 1,
-            fractalNoiseStrength: 1,
+            descriptionSize: 0.085,
+            descriptionSpacing: 0.05,
+            waveStrength: 2,
+            waveFrequency: 2,
+            fractalNoiseStrength: 1.5,
+            stripeStrength: { x: 0.27, y: 1.5 },
+            base: -0.6,
         }
     },
     {
@@ -85,18 +88,17 @@ Reconstruction diverges from checksum.
             subtitleColor: "#222222",
             descriptionColor: "#2A2A2A",
             subtitleSize: 0.1,
-            descriptionSize: 0.065,
-            descriptionSpacing: 0.06,
+            descriptionSize: 0.075,
+            descriptionSpacing: 0.08,
         }
     },
     {
         title: "RESIDUE",
         subtitle: "AUDIO FRAGMENT • NOVEMBER 3, 1973",
-        description: `Audio pattern reconstructed.    
-Sector: 04-C   
-pts=1973.11.03-0341Z   
+        description: `Audio pattern reconstructed  
+Sector 04-C | pts=1973.11.03-0341Z  
 Format: .dat / .json / unknown  
-↳ recovery complete ✖ signal corrupted`,
+↳ Recovery complete ✖ Signal corrupted`,
         presets: {
             ...basePresets,
             titleFont: "EBGaramond-Regular",
@@ -117,16 +119,19 @@ Format: .dat / .json / unknown
             edgeSmoothnessTop: 0.08,
             edgeSmoothnessBottom: 0.4,
             titleColor: "#333333",
-            titleSize: 0.22,
+            titleSize: 0.25,
             titleSpacing: 0.28,
+            subtitleSize: 0.1,
+            subtitleSpacing: 0.02,
             subtitleColor: "#323232",
             descriptionColor: "#444444",
-            descriptionSize: 0.07,
+            descriptionSize: 0.075,
+            descriptionSpacing: 0.08,
         }
     },
     {
         title: "JAM",
-        subtitle: "SIGX COLLISION • CODE: R-2099 ▓ • JULY 19, 2099",
+        subtitle: "SIGX COLLISION • CODE: R-2099 ▓ • 07.19",
         description: `When current stalls, ▒▒▒ fractures.  
 The machine stutt▓ers—and forɢets to lie.  
 Distortɨon becomes the clearest signal.
@@ -158,8 +163,8 @@ Distortɨon becomes the clearest signal.
             titleSize: 0.25,
             subtitleColor: "#F0F0F0",
             descriptionColor: "#DDDDDD",
-            subtitleSize: 0.068,
-            descriptionSize: 0.065,
+            subtitleSize: 0.083,
+            descriptionSize: 0.075,
             titleSpacing: 1.5,
         }
     },
@@ -176,7 +181,8 @@ Signal weight detected in absence.`,
             descriptionFont: "GFSDidot-Regular",
             dustColor: "#ffffff",
             backgroundColor: "#282828",
-            titleSpacing: 1.3,
+            titleSpacing: 1.2,
+            titleSize: 0.2,
             stripeStrength: { x: 0.27, y: 0.3 },
             stripeFreq: { x: 5, y: 300 },
             stripeSpeed: { x: -0.5, y: 0 },
@@ -189,8 +195,10 @@ Signal weight detected in absence.`,
             titleColor: "#E0E0E0",
             subtitleColor: "#E6E6E6",
             descriptionColor: "#CCCCCC",
-            subtitleSize: 0.082,
-            descriptionSize: 0.075,
+            subtitleSize: 0.08,
+            subtitleSpacing: 0.02,
+            descriptionSize: 0.085,
+            descriptionSpacing: 0.1,
         }
     },
 ];
