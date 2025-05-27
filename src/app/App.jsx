@@ -16,24 +16,62 @@ export default function App() {
     const { isMobile } = useGlobalStore();
     const currentPoster = posterData[posterIndex];
 
+
+    //🔹 Swipe handling
+    useEffect(() => {
+        let touchStartX = 0;
+
+        const handleTouchStart = (e) => {
+            touchStartX = e.touches[0].clientX;
+        };
+
+        const handleTouchEnd = (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const deltaX = touchEndX - touchStartX;
+
+            if (Math.abs(deltaX) > 50) {
+                if (deltaX < 0) {
+                    // Swipe left → next
+                    setPosterIndex((i) => (i + 1) % posterData.length);
+                } else {
+                    // Swipe right → previous
+                    setPosterIndex((i) =>
+                        (i - 1 + posterData.length) % posterData.length
+                    );
+                }
+            }
+        };
+
+        window.addEventListener('touchstart', handleTouchStart);
+        window.addEventListener('touchend', handleTouchEnd);
+
+        return () => {
+            window.removeEventListener('touchstart', handleTouchStart);
+            window.removeEventListener('touchend', handleTouchEnd);
+        };
+    }, []);
+
     return (
         <>
-            <GlobalStates />
-
             <>
-                <PosterSelector
+                <GlobalStates />
+
+                {isMobile ? (
+                    <div className="swipe-hint">← SWIPE →</div>
+                ) : <PosterSelector
                     current={currentPoster.title.toLowerCase()}
                     onSelect={(id) => {
                         const index = posterData.findIndex(p => p.title.toLowerCase() === id);
                         if (index !== -1) setPosterIndex(index);
                     }}
-                />
+                />}
+
                 <Leva hidden flat theme={customTheme} titleBar={{ filter: false, title: 'Menu' }} collapsed={false} />
                 <Canvas
                     shadows
                     orthographic
                     camera={{
-                        zoom: isMobile ? 100 : 150,
+                        zoom: isMobile ? 120 : 150,
                         position: [0, 0, 1],
                         near: 0.1,
                     }}

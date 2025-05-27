@@ -41,6 +41,18 @@ body,
     z-index: 9999;
 }
 
+.swipe-hint {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: #888;
+  opacity: 0.5;
+  font-family: monospace;
+  z-index: 10;
+}
+
 @keyframes pulse {
     0% {
         opacity: 0.4;
@@ -52,3 +64,4 @@ body,
         transform: scale(1.2);
     }
 }
+
