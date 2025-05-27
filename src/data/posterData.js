@@ -58,6 +58,8 @@ export const posterData = [
             subtitleColor: "#3C3C3C",
             descriptionColor: "#3A3A3A",
             descriptionSize: 0.08,
+            waveStrength: 1,
+            fractalNoiseStrength: 1,
         }
     },
     {

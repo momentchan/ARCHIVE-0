@@ -5,7 +5,7 @@ import { folder, levaStore, useControls } from 'leva';
 import * as THREE from 'three';
 
 const Dust = ({ presets = {} }) => { // Ensure presets has a default value
-    const collapsed = true;
+    const collapsed = false;
 
     const controls = useControls('Effect', {
         Basic: folder({

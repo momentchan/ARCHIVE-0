@@ -1,17 +1,20 @@
 import { useState, useEffect, useRef } from 'react';
+import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation';
 import '../PosterSelector.css';
 
 const POSTERS = [
-    { id: 'null', label: 'NULL', detail: '[static]' },
-    { id: 'trace', label: 'TRACE', detail: '[REBUILD:2164.05.06]' },
-    { id: 'residue', label: 'RESIDUE', detail: '[FRAGMENT:1973.11.03]' },
-    { id: 'jam', label: 'JAM', detail: '[SIGX:2099.07.19]' },
-    { id: 'fall', label: 'FALL', detail: '[SYSLOG:1987.03.14]' },
+    { id: 'null', label: 'NULL', detail: '' },
+    { id: 'trace', label: 'TRACE', detail: '' },
+    { id: 'residue', label: 'RESIDUE', detail: '' },
+    { id: 'jam', label: 'JAM', detail: '' },
+    { id: 'fall', label: 'FALL', detail: '' },
 ];
 
 export default function PosterSelector({ current, onSelect }) {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const containerRef = useRef(null);
+
+    useKeyboardNavigation(current, POSTERS, onSelect);
 
     useEffect(() => {
         if (window.innerWidth < 768) setOpen(false);
