@@ -11,7 +11,7 @@ body,
 }
 
 [class*="leva-t-"]:has(> div[style*="height: 0px"]) {
-    width: 100px;
+    width: 130px;
     opacity: 0.2;
 }
 
@@ -25,7 +25,11 @@ body,
 }
 
 [class*="leva-t-"] {
-    left: 10px;
+    /* left: 10px; */
+}
+
+[class*="leva-c-"] {
+    /* left: 10px; */
 }
 
 .custom-cursor {

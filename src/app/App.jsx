@@ -13,7 +13,6 @@ import PosterSelector from "../component/PosterSelector";
 
 export default function App() {
     const [posterIndex, setPosterIndex] = useState(0);
-    const [levaHidden, setLevaHidden] = useState(true); // Add state for Leva visibility
     const { isMobile } = useGlobalStore();
     const currentPoster = posterData[posterIndex];
 
@@ -52,18 +51,6 @@ export default function App() {
         };
     }, []);
 
-    // Add keyboard handler for Leva visibility
-    useEffect(() => {
-        const handleKeyPress = (e) => {
-            if (e.key.toLowerCase() === 'h') {
-                setLevaHidden(prev => !prev);
-            }
-        };
-
-        window.addEventListener('keydown', handleKeyPress);
-        return () => window.removeEventListener('keydown', handleKeyPress);
-    }, []);
-
     const handlePosterSelect = (id) => {
         const index = posterData.findIndex(p => p.title.toLowerCase() === id);
         if (index !== -1) setPosterIndex(index);
@@ -84,14 +71,13 @@ export default function App() {
                 )}
 
                 <Leva
-                    hidden={levaHidden}
+                    hidden={isMobile}
                     flat
                     theme={customTheme}
-                    titleBar={{ filter: false, title: 'Menu' }}
-                    collapsed={false}
+                    titleBar={{ filter: false, title: 'Setting' }}
+                    collapsed={true}
                 />
                 <Canvas
-                    shadows
                     orthographic
                     camera={{
                         zoom: isMobile ? 120 : 150,
@@ -114,7 +100,7 @@ export default function App() {
                     >
                         {({ presets, animAlpha }) => <Dust presets={presets} animAlpha={animAlpha} />}
                     </Poster>
-                    <Utilities />
+                    {/* <Utilities /> */}
                 </Canvas>
             </>
         </>

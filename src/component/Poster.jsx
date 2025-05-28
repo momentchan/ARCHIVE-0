@@ -104,7 +104,7 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
             prevColor.current.copy(targetColor);
             gl.setClearColor(targetColor);
         }
-    }, [animAlpha]);
+    }, [animAlpha, backgroundColor]);
 
     // Shared Text Props
     const sharedTextProps = {
