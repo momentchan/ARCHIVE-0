@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CustomShaderMaterial } from '../../r3f-gist/shader/CustomShaderMaterial';
 import fragmentShader from './fragment.glsl';
 import { folder, levaStore, useControls } from 'leva';
@@ -72,6 +72,15 @@ const Dust = ({ presets = {}, animAlpha }) => { // Ensure presets has a default 
         });
     }, [presets]);
 
+    const [texture, setTexture] = useState(null);
+
+    useEffect(() => {
+        const loader = new THREE.TextureLoader();
+        loader.load('/image.png', (loadedTexture) => {
+            setTexture(loadedTexture);
+        });
+    }, []);
+
     const uniforms = {
         uBase: controls.base,
         uStripeStrength: new THREE.Vector2(controls.stripeStrength.x, controls.stripeStrength.y),
@@ -91,10 +100,11 @@ const Dust = ({ presets = {}, animAlpha }) => { // Ensure presets has a default 
         uStripeSpeed: new THREE.Vector2(controls.stripeSpeed.x, controls.stripeSpeed.y),
         uReseedChaos: controls.reseedChaos,
         uAlpha: animAlpha,
+        uTexture: texture, // Add uTexture uniform
     };
 
     return (
-        <mesh>
+        <mesh frustumCulled={false}>
             <planeGeometry args={[2, 2]} />
             <CustomShaderMaterial
                 fragmentShader={fragmentShader}

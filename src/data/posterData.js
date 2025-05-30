@@ -41,6 +41,35 @@ const basePresets = {
 
 export const posterData = [
     {
+        title: "美麗真 復木",
+        subtitle: "Shinnobi restore & curated",
+        description: ``,
+        presets: {
+            ...basePresets,
+            titleFont: "NotoSerifTC-Medium",
+            subtitleFont: "Figtree-Medium",
+            descriptionFont: "Inter-Regular",
+            dustColor: "#CBA052",
+            titleColor: "#323237",
+            backgroundColor: "#f1f3f3",
+            subtitleColor: "#323237",
+            descriptionColor: "#3A3A3A",
+            descriptionSize: 0.085,
+            descriptionSpacing: 0.05,
+            edgeSmoothnessTop: 0.0,
+            waveStrength: 2,
+            separation: 1,
+            stripeFreq: { x: 400, y: 250 },
+            waveFrequency: 2,
+            wavePower: 3.3,
+            grainFreqLower: 1000,
+            fractalNoiseStrength: 1.2,
+            fractalNoiseFreq: 1,
+            stripeStrength: { x: 0.27, y: 1.5 },
+            base: -0.6,
+        }
+    },
+    {
         title: "NULL",
         subtitle: "SYSTEM INITIATION • JANUARY 1, 1970",
         description: `⟶ signal: none  

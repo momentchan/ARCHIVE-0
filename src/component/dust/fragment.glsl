@@ -25,9 +25,10 @@ uniform float uFractalNoiseFreq;
 uniform float uFractalSpeed;
 uniform float uReseedChaos;
 uniform float uAlpha;
+uniform sampler2D uTexture;
 
-float calculateEdgeMask(vec2 uv, vec2 smoothness, float baseValue) {
-    float verticalEdge = remap(smoothstep(0.0, smoothness.x, 1.0 - uv.y), vec2(0.0, 1.0), vec2(baseValue, 1.0));
+float calculateEdgeMask(vec2 uv, vec2 smoothness) {
+    float verticalEdge = remap(smoothstep(0.0, smoothness.x, 1.0 - uv.y), vec2(0.0, 1.0), vec2(0., 1.0));
     float fadeOut = smoothstep(0.0, smoothness.y, uv.y);
     return verticalEdge * fadeOut;
 }
@@ -56,7 +57,7 @@ float calculateBlurredGrain(vec2 uv) {
             vec2 offset = vec2(x, y) * blurSize;
             vec2 grainUv = uv + offset + seedOffset;
 
-            grain += mix(0.0, grainNoise(grainUv, uGrainFreq.y, vec2(0.0, 1.0)), smoothstep(uSeparation, 0.0, uv.y));
+            grain += mix(0.0, grainNoise(grainUv, uGrainFreq.y, vec2(0.0, .8)), 1.0);
         }
     }
 
@@ -65,7 +66,7 @@ float calculateBlurredGrain(vec2 uv) {
 
 void main() {
     // Edge mask
-    float edgeMask = calculateEdgeMask(vUv, uEdgeSmoothness, uBase); 
+    float edgeMask = calculateEdgeMask(vUv, uEdgeSmoothness); 
 
     // Pattern layers
     float wave = calculateGradNoise(vec2(0.5, vUv.y), uWaveFreq, uWaveSpeed, uWavePower, .0, uWaveStrength);
@@ -75,19 +76,23 @@ void main() {
     vec2 grainOffset = getGrainSeedOffset(uTime, uReseedChaos);
     float noise = grainNoise(vUv + grainOffset, uGrainFreq.x, vec2(0.0, 0.05));
 
-    float fNoise = (fbm2(vUv * uFractalNoiseFreq, uTime * uFractalSpeed) - 0.0) * uFractalNoiseStrength; // Updated to use uFractalSpeed
+    float fNoise = (fbm2(vUv * uFractalNoiseFreq, uTime * uFractalSpeed) - 0.0) * uFractalNoiseStrength;
 
     // Combine base pattern
-    float basePattern = uBase + (hStripe + vStripe) * (wave + fNoise) + noise;
-    basePattern *= edgeMask;
+    float basePattern = uBase + (hStripe + vStripe) * (wave + pow(fNoise, 2.0)) + noise;
+    basePattern *= 1.0; // edgeMask;
 
     // Add grain and finalize
     float grain = calculateBlurredGrain(vUv);
     float finalPattern = clamp(basePattern + grain, 0.0, 1.0);
 
     // Output
-    vec3 finalColor = uColor * (1.0 - finalPattern);
+    vec3 finalColor = uColor * (1.0 - finalPattern) ;
+
+     // Sample texture
+    float textureColor = 1.0;//(1.0 - texture2D(uTexture, vUv).a * (1.0 - finalPattern));
 
     float alpha = (1.0 - finalPattern) * smoothstep(0.0, uEdgeSmoothness.y, vUv.y);
-    gl_FragColor = vec4(finalColor, alpha * uAlpha);
+
+    gl_FragColor = vec4(finalColor, alpha * uAlpha * textureColor);
 }

@@ -125,14 +125,39 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
                 font={fontPaths[currentTitleFont]} // Applied titleFont
                 {...sharedTextProps}
             >
-                {controls.titleText}
+                {controls.titleText}  
             </Text>
 
-            <Center position={[0, -1.4, 0]} left>
+            <Text
+                position={[0.175, -1.4, 0]}
+                anchorX="center"
+                fontSize={controls.titleSize}
+                anchorY="middle"
+                color={controls.titleColor}
+                font={fontPaths[currentTitleFont]} // Applied titleFont
+                {...sharedTextProps}
+            >
+                •
+            </Text>
+
+            <Text
+                position={[0, -1.7, 0]}
+                fontSize={controls.subtitleSize}
+                anchorX="center"
+                anchorY="middle"
+                letterSpacing={controls.subtitleSpacing}
+                color={controls.subtitleColor}
+                font={fontPaths[currentSubtitleFont]} // Applied subtitleFont
+                {...sharedTextProps}
+            >
+                {controls.subtitleText}
+            </Text>
+
+            {/* <Center position={[0, -1.4, 0]} Center>
                 <Text
                     position={[0, 0, 0]}
                     fontSize={controls.subtitleSize}
-                    anchorX="left"
+                    anchorX="center"
                     anchorY="middle"
                     letterSpacing={controls.subtitleSpacing}
                     color={controls.subtitleColor}
@@ -155,7 +180,7 @@ const Poster = ({ title = '', subtitle = '', description = '', presets = {}, chi
                 >
                     {controls.descriptionText}
                 </Text>
-            </Center>
+            </Center> */}
 
             {typeof children === 'function' ? children({ presets, animAlpha: animAlpha }) : children}
         </Center>

@@ -17,4 +17,7 @@ export const fontPaths = {
     'LibreBaskerville-Regular': './fonts/LibreBaskerville-Regular.ttf',
     'NotoSansJP-Regular': './fonts/NotoSansJP-Regular.ttf',
     'NotoSerifGeorgian-Regular': './fonts/NotoSerifGeorgian-Regular.ttf',
+
+    'Figtree-Medium': './fonts/Figtree-Medium.ttf',
+    'NotoSerifTC-Medium': './fonts/NotoSerifTC-Medium.ttf',
 };
