@@ -1,5 +1,7 @@
 # ARCHIVE:0
 
+[**Live Demo**](https://momentchan.github.io/ARCHIVE-0/)
+
 **ARCHIVE:0** is a series of **interactive, time-reactive posters** built with [React](https://reactjs.org/) and [Three.js](https://threejs.org/), using a single custom GLSL shader to explore the aesthetics of fragmented digital memory.
 
 Each visual behaves like a **fragmented signal**—glitching, fading, and layered with soft noise—as if retrieved from a synthetic archive: corrupted logs, lost memories, or failed reconstructions from a machine attempting to remember.
